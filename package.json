@@ -1,0 +1,10 @@
+{
+  "name": "numpy-dojo",
+  "version": "1.0.0",
+  "description": "Interactive NumPy learning tool with 22 hands-on lessons",
+  "private": true,
+  "scripts": {
+    "dev": "npx serve .",
+    "build": "echo 'Static site — no build needed'"
+  }
+}
