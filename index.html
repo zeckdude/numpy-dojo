@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>NumPy Dojo</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🥋</text></svg>">
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600;700&family=Playfair+Display:wght@700;800&display=swap" rel="stylesheet">
 <style>
 :root {
@@ -63,16 +64,13 @@ header {
 .brand {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 6px;
 }
 
 .brand-mark {
   width: 32px; height: 32px;
-  background: linear-gradient(135deg, var(--accent), #d35e1a);
-  border-radius: 8px;
   display: grid; place-items: center;
-  font-family: 'JetBrains Mono', monospace;
-  font-size: 11px; font-weight: 700; color: #fff;
+  font-size: 28px; line-height: 1;
 }
 
 .brand h1 {
@@ -349,6 +347,62 @@ textarea.editor::placeholder { color: var(--text-lo); }
 }
 
 @keyframes slideIn { from{transform:translateY(-8px);opacity:0} to{transform:translateY(0);opacity:1} }
+
+/* ━━━ CONFIRM DIALOG ━━━ */
+.dialog-overlay {
+  display: none; position: fixed; inset: 0;
+  background: rgba(0,0,0,.65); z-index: 100;
+  place-items: center; animation: fadeIn .15s ease;
+}
+.dialog-overlay.show { display: grid; }
+
+.dialog {
+  background: var(--bg-card); border: 1px solid var(--border);
+  border-radius: 12px; padding: 28px 32px; max-width: 400px;
+  width: 90%; animation: popIn .2s ease;
+  box-shadow: 0 20px 60px rgba(0,0,0,.5);
+}
+
+.dialog h3 {
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-size: 16px; font-weight: 700; margin-bottom: 10px;
+  color: var(--text-hi);
+}
+
+.dialog p {
+  font-size: 13px; line-height: 1.6; color: var(--text-mid);
+  margin-bottom: 22px;
+}
+
+.dialog-actions {
+  display: flex; gap: 10px; justify-content: flex-end;
+}
+
+.dialog-cancel {
+  background: none; border: 1px solid var(--border);
+  color: var(--text-mid); padding: 8px 20px; border-radius: 6px;
+  font-family: inherit; font-size: 13px; font-weight: 500;
+  cursor: pointer; transition: .15s;
+}
+.dialog-cancel:hover { border-color: var(--text-mid); color: var(--text-hi); }
+
+.dialog-confirm {
+  background: var(--error); border: none; color: #fff;
+  padding: 8px 20px; border-radius: 6px; font-family: inherit;
+  font-size: 13px; font-weight: 600; cursor: pointer; transition: .15s;
+}
+.dialog-confirm:hover { filter: brightness(1.1); }
+
+.reset-lesson-btn {
+  background: none; border: 1px solid var(--border);
+  color: var(--text-lo); font-size: 11px; padding: 5px 12px;
+  border-radius: 5px; cursor: pointer; font-family: inherit;
+  transition: .15s; margin-top: 12px; margin-left: 8px;
+}
+.reset-lesson-btn:hover { border-color: var(--error); color: var(--error); }
+
+@keyframes fadeIn { from{opacity:0} to{opacity:1} }
+@keyframes popIn { from{transform:scale(.95);opacity:0} to{transform:scale(1);opacity:1} }
 </style>
 </head>
 <body>
@@ -356,15 +410,27 @@ textarea.editor::placeholder { color: var(--text-lo); }
 
 <header>
   <div class="brand">
-    <div class="brand-mark">np</div>
+    <div class="brand-mark">🥋</div>
     <h1>NumPy <em>Dojo</em></h1>
   </div>
   <div class="meter">
     <span class="meter-label"><b id="doneN">0</b> / <span id="totalN">22</span></span>
     <div class="meter-track"><div class="meter-fill" id="meterFill"></div></div>
-    <button class="reset-btn" onclick="resetAll()">Reset</button>
+    <button class="reset-btn" id="resetAllBtn" onclick="showResetAllDialog()" style="display:none">Reset All</button>
   </div>
 </header>
+
+<!-- Confirmation Dialog -->
+<div class="dialog-overlay" id="dialogOverlay" onclick="if(event.target===this)closeDialog()">
+  <div class="dialog">
+    <h3 id="dialogTitle">Reset Progress</h3>
+    <p id="dialogMsg">Are you sure?</p>
+    <div class="dialog-actions">
+      <button class="dialog-cancel" onclick="closeDialog()">Cancel</button>
+      <button class="dialog-confirm" id="dialogConfirm">Reset</button>
+    </div>
+  </div>
+</div>
 
 <nav id="sidebar"></nav>
 
@@ -2082,14 +2148,83 @@ function transformArithmetic(expr) {
 
 let cur = 0;
 let completed = new Set();
+let savedCode = {};
 
+// Load saved progress and code
 try {
   const s = localStorage.getItem('np_dojo');
   if (s) completed = new Set(JSON.parse(s));
+  const c = localStorage.getItem('np_dojo_code');
+  if (c) savedCode = JSON.parse(c);
 } catch(e) {}
+
+// Start at furthest uncompleted lesson
+function getResumeLesson() {
+  for (let i = 0; i < lessons.length; i++) {
+    if (!completed.has(i)) return i;
+  }
+  return 0; // all complete — go to start
+}
+cur = getResumeLesson();
 
 function save() {
   try { localStorage.setItem('np_dojo', JSON.stringify([...completed])); } catch(e) {}
+}
+
+function saveCode() {
+  try { localStorage.setItem('np_dojo_code', JSON.stringify(savedCode)); } catch(e) {}
+}
+
+// ─── Dialog system ───
+let dialogCallback = null;
+
+function showDialog(title, msg, confirmLabel, onConfirm) {
+  document.getElementById('dialogTitle').textContent = title;
+  document.getElementById('dialogMsg').textContent = msg;
+  const btn = document.getElementById('dialogConfirm');
+  btn.textContent = confirmLabel || 'Reset';
+  document.getElementById('dialogOverlay').classList.add('show');
+  dialogCallback = onConfirm;
+  btn.onclick = () => {
+    const cb = dialogCallback;
+    closeDialog();
+    if (cb) cb();
+  };
+}
+
+function closeDialog() {
+  document.getElementById('dialogOverlay').classList.remove('show');
+  dialogCallback = null;
+}
+
+function showResetAllDialog() {
+  showDialog(
+    'Reset All Progress',
+    'This will clear your progress and saved code for every lesson. This cannot be undone.',
+    'Reset Everything',
+    () => {
+      completed.clear();
+      savedCode = {};
+      save(); saveCode();
+      cur = 0;
+      buildNav(); renderLesson();
+    }
+  );
+}
+
+function showResetLessonDialog(idx) {
+  const title = lessons[idx].title;
+  showDialog(
+    `Reset "${title}"`,
+    `This will clear your progress and saved code for this lesson, resetting it to the starter code.`,
+    'Reset Lesson',
+    () => {
+      completed.delete(idx);
+      delete savedCode[idx];
+      save(); saveCode();
+      buildNav(); renderLesson();
+    }
+  );
 }
 
 function buildNav() {
@@ -2112,6 +2247,7 @@ function buildNav() {
   document.getElementById('doneN').textContent = completed.size;
   document.getElementById('totalN').textContent = lessons.length;
   document.getElementById('meterFill').style.width = (completed.size / lessons.length * 100) + '%';
+  document.getElementById('resetAllBtn').style.display = completed.size > 0 ? '' : 'none';
 
   if (completed.size === lessons.length) {
     document.getElementById('doneScreen').classList.add('show');
@@ -2124,6 +2260,7 @@ function buildNav() {
 
 function renderLesson() {
   const l = lessons[cur];
+  const isDone = completed.has(cur);
   document.getElementById('learn').innerHTML = `
     <div class="badge">${l.badge}</div>
     <h2>${l.title}</h2>
@@ -2132,10 +2269,14 @@ function renderLesson() {
       <div class="task-label">🎯 Your Task</div>
       <p>${l.task}</p>
     </div>
-    <button class="hint-btn" onclick="this.nextElementSibling.classList.toggle('show')">💡 Show Hint</button>
-    <div class="hint-box">${l.hint}</div>
+    <div style="display:flex;align-items:center;flex-wrap:wrap;gap:4px;margin-top:12px;">
+      <button class="hint-btn" onclick="document.getElementById('hintBox').classList.toggle('show')">💡 Show Hint</button>
+      ${isDone ? `<button class="reset-lesson-btn" onclick="showResetLessonDialog(${cur})">↺ Reset This Lesson</button>` : ''}
+    </div>
+    <div class="hint-box" id="hintBox">${l.hint}</div>
   `;
-  document.getElementById('ed').value = l.starter;
+  // Restore saved code, or fall back to starter
+  document.getElementById('ed').value = savedCode[cur] || l.starter;
   document.getElementById('out').textContent = 'Run your code to see output here.';
   document.getElementById('out').className = 'output-text';
   document.getElementById('resBanner').className = 'result-bar';
@@ -2149,6 +2290,10 @@ function exec() {
   const banner = document.getElementById('resBanner');
   const resText = document.getElementById('resText');
   const nextBtn = document.getElementById('nextBtn');
+
+  // Save code for this lesson
+  savedCode[cur] = code;
+  saveCode();
 
   try {
     const {output, scope} = executeCodeFinal(code);
@@ -2181,13 +2326,15 @@ function exec() {
   }
 }
 
-function go(idx) { cur = idx; renderLesson(); buildNav(); }
-function goNext() { if (cur < lessons.length - 1) go(cur + 1); }
-function resetAll() {
-  if (confirm('Reset all progress?')) {
-    completed.clear(); save(); cur = 0; buildNav(); renderLesson();
-  }
+function go(idx) {
+  // Save current code before navigating away
+  savedCode[cur] = document.getElementById('ed').value;
+  saveCode();
+  cur = idx;
+  renderLesson();
+  buildNav();
 }
+function goNext() { if (cur < lessons.length - 1) go(cur + 1); }
 
 // Tab key support
 document.getElementById('ed').addEventListener('keydown', function(e) {
@@ -2198,6 +2345,15 @@ document.getElementById('ed').addEventListener('keydown', function(e) {
     this.selectionStart = this.selectionEnd = s + 4;
   }
   if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') { e.preventDefault(); exec(); }
+});
+
+// Close dialog on Escape
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeDialog(); });
+
+// Save code on page leave
+window.addEventListener('beforeunload', () => {
+  savedCode[cur] = document.getElementById('ed').value;
+  saveCode();
 });
 
 // Init
