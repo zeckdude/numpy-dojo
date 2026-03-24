@@ -1,10 +1,21 @@
 {
   "name": "numpy-dojo",
-  "version": "1.0.0",
-  "description": "Interactive NumPy learning tool with 22 hands-on lessons",
+  "version": "2.0.0",
   "private": true,
   "scripts": {
-    "dev": "npx serve .",
-    "build": "echo 'Static site — no build needed'"
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start"
+  },
+  "dependencies": {
+    "next": "^14.2.0",
+    "react": "^18.3.0",
+    "react-dom": "^18.3.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "@types/react": "^18.3.0",
+    "@types/react-dom": "^18.3.0",
+    "typescript": "^5.4.0"
   }
 }
