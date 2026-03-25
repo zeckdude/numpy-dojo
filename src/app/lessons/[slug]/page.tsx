@@ -9,12 +9,13 @@ export function generateStaticParams() {
   return LESSON_PATH_SLUGS.map((slug) => ({ slug }));
 }
 
-export default function LessonPage({ params }: { params: { slug: string } }) {
-  if (lessonIndexFromSlug(params.slug) === null) notFound();
+export default async function LessonPage({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
+  if (lessonIndexFromSlug(slug) === null) notFound();
   const existingWhyIllustrationSrcs = getExistingWhyIllustrationSrcs();
   return (
     <NumPyDojoApp
-      route={{ kind: 'lesson', slug: params.slug }}
+      route={{ kind: 'lesson', slug }}
       existingWhyIllustrationSrcs={existingWhyIllustrationSrcs}
     />
   );

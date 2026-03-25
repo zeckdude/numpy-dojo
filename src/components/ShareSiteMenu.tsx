@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
+import { track } from '../lib/analytics';
 
 export const DEFAULT_SHARE_TITLE = 'NumPy Dojo';
 export const DEFAULT_SHARE_TEXT =
@@ -76,6 +77,7 @@ export function ShareSiteMenu({
     const url = effectiveUrl();
     try {
       await navigator.clipboard.writeText(url);
+      track('share_copy', { variant });
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     } catch {
@@ -107,7 +109,13 @@ export function ShareSiteMenu({
         aria-expanded={open}
         aria-haspopup="menu"
         aria-label={ariaLabel}
-        onClick={() => setOpen((v) => !v)}
+        onClick={() =>
+          setOpen((v) => {
+            const next = !v;
+            if (next) track('share_open', { variant });
+            return next;
+          })
+        }
       >
         {triggerLabel}
       </button>

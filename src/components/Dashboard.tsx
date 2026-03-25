@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { useState } from 'react';
 import { ModuleSummary } from '../data/modules';
 import { lessonSlugAt } from '../lib/routes';
+import { track } from '../lib/analytics';
 import { ShareSiteMenu } from './ShareSiteMenu';
 
 export interface ScenarioCardSummary {
@@ -44,6 +45,12 @@ export function Dashboard({
       ? Math.round((completedScenarioCount / totalScenarios) * 100)
       : 0;
   const allLessonsDone = totalLessons > 0 && completedLessonCount >= totalLessons;
+  const heroCtaLabel = allLessonsDone
+    ? 'Open the dojo'
+    : completedLessonCount > 0
+      ? 'Continue lessons'
+      : 'Start with Lesson 1';
+  const heroCtaHref = '/lessons';
 
   return (
     <div className="dashboard">
@@ -56,12 +63,12 @@ export function Dashboard({
           refresher.
         </p>
         <div className="dashboard-hero-actions">
-          <Link href="/lessons" className="dashboard-cta">
-            {allLessonsDone
-              ? 'Open the dojo'
-              : completedLessonCount > 0
-                ? 'Continue lessons'
-                : 'Start with Lesson 1'}
+          <Link
+            href={heroCtaHref}
+            className="dashboard-cta"
+            onClick={() => track('dashboard_cta_click', { label: heroCtaLabel, href: heroCtaHref })}
+          >
+            {heroCtaLabel}
           </Link>
           <span className="dashboard-hero-meta">
             {allLessonsDone

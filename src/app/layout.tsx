@@ -1,5 +1,8 @@
 import type { Metadata } from 'next';
+import { Suspense } from 'react';
 import './globals.css';
+import { PostHogInit } from '@/components/PostHogInit';
+import { AnalyticsPageView } from '@/components/AnalyticsPageView';
 
 export const metadata: Metadata = {
   title: 'NumPy Dojo',
@@ -36,7 +39,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           rel="stylesheet"
         />
       </head>
-      <body suppressHydrationWarning>{children}</body>
+      <body suppressHydrationWarning>
+        <PostHogInit />
+        <Suspense fallback={null}>
+          <AnalyticsPageView />
+        </Suspense>
+        {children}
+      </body>
     </html>
   );
 }

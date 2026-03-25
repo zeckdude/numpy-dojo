@@ -3,6 +3,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState, useRef, useEffect, useCallback, type KeyboardEvent } from 'react';
 import { executeCode } from '../lib/executor';
+import { captureClientError, track } from '../lib/analytics';
 
 const OUTPUT_SPLIT_STORAGE_KEY = 'np_dojo_editor_output_pct';
 const OUTPUT_SPLIT_DEFAULT = 58;
@@ -91,12 +92,19 @@ export function CodeEditor({ codeKey, savedCode, validate, onSaveCode, onPass, o
 
   const runCode = useCallback(() => {
     onSaveCode(code);
+    const context = codeKey.startsWith('scenario_')
+      ? 'scenario'
+      : codeKey.startsWith('lesson_')
+        ? 'lesson'
+        : 'other';
     try {
       const { output: lines, scope } = executeCode(code);
       const txt = lines.join('\n');
       const validation = validate(scope);
+      const validationOk = validation === true;
+      track('code_run', { context, code_key: codeKey, validation_ok: validationOk });
 
-      if (validation === true) {
+      if (validationOk) {
         setOutput(txt || 'All checks passed!');
         setOutputClass('ok');
         setResult('pass');
@@ -106,14 +114,17 @@ export function CodeEditor({ codeKey, savedCode, validate, onSaveCode, onPass, o
         setOutputClass('err');
         setResult('fail');
       }
-    } catch (err: any) {
-      setOutput('⚠️ Error:\n' + err.message);
+    } catch (err: unknown) {
+      captureClientError(err, { surface: 'code_run', context, code_key: codeKey });
+      track('code_run', { context, code_key: codeKey, validation_ok: false, runtime_error: true });
+      const msg = err instanceof Error ? err.message : String(err);
+      setOutput('⚠️ Error:\n' + msg);
       setOutputClass('err');
       setResult('fail');
     }
 
     if (!outputOpen) setOutputOpen(true);
-  }, [code, validate, onSaveCode, onPass, outputOpen]);
+  }, [code, codeKey, validate, onSaveCode, onPass, outputOpen]);
 
   const handleKeyDown = useCallback((e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === 'Tab') {
@@ -237,7 +248,13 @@ export function CodeEditor({ codeKey, savedCode, validate, onSaveCode, onPass, o
             <button
               type="button"
               className={`icon-btn${mobileEditorExpanded ? ' icon-btn--active' : ''}`}
-              onClick={() => setMobileEditorExpanded((v) => !v)}
+              onClick={() =>
+                setMobileEditorExpanded((v) => {
+                  const next = !v;
+                  track('mobile_code_pane_expand', { expanded: next });
+                  return next;
+                })
+              }
               title={mobileEditorExpanded ? 'Show lesson and editor' : 'Expand editor height'}
               aria-label={mobileEditorExpanded ? 'Show lesson and editor' : 'Expand editor height'}
               aria-pressed={mobileEditorExpanded}

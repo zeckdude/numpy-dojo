@@ -9,12 +9,13 @@ export function generateStaticParams() {
   return SCENARIO_PATH_IDS.map((id) => ({ id }));
 }
 
-export default function ScenarioPage({ params }: { params: { id: string } }) {
-  if (scenarioIndexFromId(params.id) === null) notFound();
+export default async function ScenarioPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
+  if (scenarioIndexFromId(id) === null) notFound();
   const existingWhyIllustrationSrcs = getExistingWhyIllustrationSrcs();
   return (
     <NumPyDojoApp
-      route={{ kind: 'scenario', id: params.id }}
+      route={{ kind: 'scenario', id }}
       existingWhyIllustrationSrcs={existingWhyIllustrationSrcs}
     />
   );

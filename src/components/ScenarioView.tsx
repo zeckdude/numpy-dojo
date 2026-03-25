@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { Scenario } from '../data/types';
 import { lessonSlugAt } from '../lib/routes';
+import { track } from '../lib/analytics';
 import { CodeEditor } from './CodeEditor';
 import { WhyItMattersSection } from './WhyItMattersSection';
 import { ShareSiteMenu } from './ShareSiteMenu';
@@ -94,7 +95,13 @@ export function ScenarioView({ scenario, savedCode, onSaveCode, completedScenari
             type="button"
             className="hint-btn"
             aria-expanded={hintOpen}
-            onClick={() => setHintOpen((o) => !o)}
+            onClick={() =>
+              setHintOpen((o) => {
+                const next = !o;
+                track('hint_toggled', { open: next, surface: 'scenario' });
+                return next;
+              })
+            }
           >
             {hintOpen ? '💡 Hide Hint' : '💡 Show Hint'}
           </button>

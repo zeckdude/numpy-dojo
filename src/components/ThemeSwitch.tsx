@@ -2,6 +2,7 @@
 
 import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { readStoredTheme, saveStoredTheme, setDataTheme, type StoredTheme } from '../lib/theme';
+import { track } from '../lib/analytics';
 
 export function ThemeSwitch() {
   const [open, setOpen] = useState(false);
@@ -49,6 +50,7 @@ export function ThemeSwitch() {
     setCommitted(next);
     saveStoredTheme(next);
     setDataTheme(next);
+    track('theme_changed', { theme: next });
     setOpen(false);
   };
 

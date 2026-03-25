@@ -29,6 +29,7 @@ import {
   KEY_LAST_SCENARIO_ID,
 } from '../lib/storage';
 import { lessonSlugAt, lessonIndexFromSlug, scenarioIndexFromId } from '../lib/routes';
+import { track } from '../lib/analytics';
 
 export type TabId = 'lessons' | 'scenarios' | 'quizzes';
 
@@ -154,8 +155,13 @@ export function NumPyDojoApp({
       const next = new Set(completedLessons);
       next.add(idx);
       saveLessons(next);
+      track('lesson_completed', {
+        lesson_index: idx,
+        lesson_slug: lessonSlugAt(idx),
+        title: lessons[idx]?.title,
+      });
     },
-    [completedLessons, saveLessons]
+    [completedLessons, saveLessons, lessons]
   );
 
   const resetLesson = useCallback(
@@ -197,6 +203,7 @@ export function NumPyDojoApp({
 
   const navigateToTab = useCallback(
     (tab: TabId) => {
+      track('tab_selected', { tab });
       if (tab === 'lessons') {
         const fallback = lessonSlugAt(nextLessonIndex);
         const slug = loadString(KEY_LAST_LESSON_SLUG, fallback) || fallback;
@@ -236,6 +243,32 @@ export function NumPyDojoApp({
     window.addEventListener('keydown', handler);
     return () => window.removeEventListener('keydown', handler);
   }, [dojoOpen, activeTab, currentLesson, router]);
+
+  useEffect(() => {
+    if (route.kind !== 'lesson') return;
+    const l = lessons[currentLesson];
+    if (!l) return;
+    track('lesson_opened', {
+      lesson_index: currentLesson,
+      lesson_slug: lessonSlugAt(currentLesson),
+      title: l.title,
+    });
+  }, [route.kind, currentLesson]);
+
+  useEffect(() => {
+    if (route.kind !== 'scenario') return;
+    const s = scenarios[currentScenario];
+    if (!s) return;
+    track('scenario_opened', {
+      scenario_id: s.id,
+      title: s.title,
+    });
+  }, [route.kind, currentScenario]);
+
+  useEffect(() => {
+    if (route.kind !== 'quiz') return;
+    track('quiz_opened', {});
+  }, [route.kind]);
 
   useEffect(() => {
     const handler = () => saveJSON('np_dojo_code', savedCode);
@@ -451,6 +484,7 @@ export function NumPyDojoApp({
                     const next = new Set(completedScenarios);
                     next.add(id);
                     saveScenarioCompletion(next);
+                    track('scenario_completed', { scenario_id: id });
                   }}
                   toast={toast}
                 />

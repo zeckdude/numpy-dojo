@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { track } from '../lib/analytics';
 import { Lesson, LessonDocLink } from '../data/types';
 import { docLinkLogoProps } from '../lib/docLinkSources';
 import { WhyItMattersSection } from './WhyItMattersSection';
@@ -114,7 +115,13 @@ export function LessonView({
             type="button"
             className="hint-btn"
             aria-expanded={hintOpen}
-            onClick={() => setHintOpen((o) => !o)}
+            onClick={() =>
+              setHintOpen((o) => {
+                const next = !o;
+                track('hint_toggled', { open: next, surface: 'lesson' });
+                return next;
+              })
+            }
           >
             {hintOpen ? '💡 Hide Hint' : '💡 Show Hint'}
           </button>
