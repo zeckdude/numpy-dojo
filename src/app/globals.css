@@ -437,9 +437,16 @@ main {
 
 .panes-learn {
   min-width: 0;
+  min-height: 0;
   overflow: hidden;
   display: flex;
   flex-direction: column;
+}
+
+/* Fill the grid row so lesson task band can sit on the bottom; scenario column scrolls inside */
+.panes-learn > .learn {
+  flex: 1;
+  min-height: 0;
 }
 
 .panes--resizable > .code-pane {
@@ -2176,14 +2183,26 @@ a.module-card.module-card--link:focus-visible {
     box-shadow: var(--shadow-mobile-nav);
   }
   nav.mobile-open { transform: translateX(0); }
-  .panes { grid-template-columns: 1fr !important; }
+  /* Let main + panes shrink so inner scroll areas work (fixed nav is out of flow) */
+  main {
+    min-height: 0;
+  }
+  /* Stack learn + code; equal flex rows so lesson task band sits on bottom of top pane */
+  .panes {
+    grid-template-columns: 1fr !important;
+    grid-template-rows: minmax(0, 1fr) minmax(0, 1fr) !important;
+    min-height: 0;
+  }
+  .panes > .panes-learn,
+  .panes > .code-pane {
+    min-height: 0;
+  }
   .panes--resizable .panes-gutter {
     display: none !important;
   }
   .panes--resizable > .code-pane {
     border-left: none;
   }
-  .learn { max-height: 45vh; }
   .learn:not(.learn--lesson) {
     overflow-y: auto;
   }
