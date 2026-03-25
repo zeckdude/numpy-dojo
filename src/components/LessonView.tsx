@@ -1,5 +1,6 @@
 'use client';
 
+import { useEffect, useState } from 'react';
 import { Lesson, LessonDocLink } from '../data/types';
 import { docLinkLogoProps } from '../lib/docLinkSources';
 import { WhyItMattersSection } from './WhyItMattersSection';
@@ -22,6 +23,12 @@ export function LessonView({
   existingWhyIllustrationSrcs,
   docLinks,
 }: Props) {
+  const [hintOpen, setHintOpen] = useState(false);
+
+  useEffect(() => {
+    setHintOpen(false);
+  }, [index]);
+
   return (
     <div className="learn learn--lesson" key={index}>
       <div className="lesson-scroll">
@@ -104,16 +111,12 @@ export function LessonView({
         </div>
         <div className="lesson-hint-actions">
           <button
+            type="button"
             className="hint-btn"
-            onClick={(e) => {
-              const row = e.currentTarget.parentElement;
-              const box = row?.nextElementSibling;
-              if (box instanceof HTMLElement && box.classList.contains('hint-box')) {
-                box.classList.toggle('show');
-              }
-            }}
+            aria-expanded={hintOpen}
+            onClick={() => setHintOpen((o) => !o)}
           >
-            💡 Show Hint
+            {hintOpen ? '💡 Hide Hint' : '💡 Show Hint'}
           </button>
           {isComplete && (
             <button className="sm-btn danger" onClick={onResetLesson}>
@@ -121,7 +124,7 @@ export function LessonView({
             </button>
           )}
         </div>
-        <div className="hint-box">{lesson.hint}</div>
+        <div className={`hint-box${hintOpen ? ' show' : ''}`}>{lesson.hint}</div>
       </div>
     </div>
   );

@@ -1048,6 +1048,11 @@ main {
 
 .icon-btn:hover { border-color: var(--text-mid); color: var(--text-mid); }
 
+.icon-btn--active {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
 /* ━━━ CODE PANE ━━━ */
 .code-pane {
   display: flex;
@@ -1075,6 +1080,12 @@ main {
   display: flex;
   align-items: center;
   gap: 6px;
+}
+
+.code-bar .icon-btn {
+  font-size: 15px;
+  font-weight: 400;
+  line-height: 1;
 }
 
 .file-tab {
@@ -2225,6 +2236,19 @@ a.module-card.module-card--link:focus-visible {
     overflow: hidden;
   }
   .code-pane { border-left: none !important; border-top: 1px solid var(--border); }
+  /* Collapse learn pane so the code column uses full main height (toggle from CodeEditor) */
+  .panes.panes--mobile-code-expanded {
+    grid-template-rows: 0fr 1fr !important;
+  }
+  .panes.panes--mobile-code-expanded > .panes-learn {
+    overflow: hidden;
+    min-height: 0;
+    visibility: hidden;
+    pointer-events: none;
+  }
+  .panes.panes--mobile-code-expanded > .code-pane {
+    border-top: none;
+  }
   .meter-track { width: 80px; }
   .tab-btn { padding: 10px 14px; font-size: 12px; }
 }

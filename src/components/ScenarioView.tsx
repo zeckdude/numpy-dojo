@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Scenario } from '../data/types';
 import { lessonSlugAt } from '../lib/routes';
 import { CodeEditor } from './CodeEditor';
@@ -22,6 +22,11 @@ interface Props {
 export function ScenarioView({ scenario, savedCode, onSaveCode, completedScenarios, onCompleteScenario, toast }: Props) {
   const [currentStep, setCurrentStep] = useState(0);
   const [completedSteps, setCompletedSteps] = useState<Set<number>>(new Set());
+  const [hintOpen, setHintOpen] = useState(false);
+
+  useEffect(() => {
+    setHintOpen(false);
+  }, [scenario.id, currentStep]);
 
   const step = scenario.steps[currentStep];
   const isScenarioDone = completedScenarios.has(scenario.id);
@@ -86,19 +91,15 @@ export function ScenarioView({ scenario, savedCode, onSaveCode, completedScenari
 
         <div style={{ display: 'flex', gap: 6, marginTop: 12, flexWrap: 'wrap' }}>
           <button
+            type="button"
             className="hint-btn"
-            onClick={(e) => {
-              const row = e.currentTarget.parentElement;
-              const box = row?.nextElementSibling;
-              if (box instanceof HTMLElement && box.classList.contains('hint-box')) {
-                box.classList.toggle('show');
-              }
-            }}
+            aria-expanded={hintOpen}
+            onClick={() => setHintOpen((o) => !o)}
           >
-            💡 Show Hint
+            {hintOpen ? '💡 Hide Hint' : '💡 Show Hint'}
           </button>
         </div>
-        <div className="hint-box">{step.hint}</div>
+        <div className={`hint-box${hintOpen ? ' show' : ''}`}>{step.hint}</div>
 
         {/* Related lessons */}
         {scenario.lessonsUsed.length > 0 && (

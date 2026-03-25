@@ -20,7 +20,10 @@ export function CodeEditor({ codeKey, savedCode, validate, onSaveCode, onPass, o
   const [outputClass, setOutputClass] = useState('');
   const [result, setResult] = useState<'pass' | 'fail' | null>(null);
   const [outputOpen, setOutputOpen] = useState(true);
+  const [isMobile, setIsMobile] = useState(false);
+  const [mobileEditorExpanded, setMobileEditorExpanded] = useState(false);
   const editorRef = useRef<HTMLTextAreaElement>(null);
+  const codePaneRef = useRef<HTMLDivElement>(null);
 
   // Keep textarea in sync when switching exercise or when persisted code loads from storage.
   useEffect(() => {
@@ -34,6 +37,30 @@ export function CodeEditor({ codeKey, savedCode, validate, onSaveCode, onPass, o
     setOutputClass('');
     setResult(null);
   }, [codeKey]);
+
+  useEffect(() => {
+    setMobileEditorExpanded(false);
+  }, [codeKey]);
+
+  useEffect(() => {
+    const mq = window.matchMedia('(max-width: 768px)');
+    const sync = () => {
+      const m = mq.matches;
+      setIsMobile(m);
+      if (!m) setMobileEditorExpanded(false);
+    };
+    sync();
+    mq.addEventListener('change', sync);
+    return () => mq.removeEventListener('change', sync);
+  }, []);
+
+  useEffect(() => {
+    const pane = codePaneRef.current?.closest('.panes');
+    if (!pane) return;
+    if (isMobile && mobileEditorExpanded) pane.classList.add('panes--mobile-code-expanded');
+    else pane.classList.remove('panes--mobile-code-expanded');
+    return () => pane.classList.remove('panes--mobile-code-expanded');
+  }, [isMobile, mobileEditorExpanded]);
 
   const runCode = useCallback(() => {
     onSaveCode(code);
@@ -107,15 +134,27 @@ export function CodeEditor({ codeKey, savedCode, validate, onSaveCode, onPass, o
   }, []);
 
   return (
-    <div className="code-pane">
+    <div className="code-pane" ref={codePaneRef}>
       <div className="code-bar">
         <div className="code-bar-left">
           <span className="file-tab">exercise.py</span>
         </div>
         <div className="code-bar-right">
           <button className="icon-btn" onClick={copyCode} title="Copy code">📋</button>
-          <button className="icon-btn" onClick={() => changeFontSize(-1)} title="Smaller">A-</button>
-          <button className="icon-btn" onClick={() => changeFontSize(1)} title="Larger">A+</button>
+          {isMobile ? (
+            <button
+              type="button"
+              className={`icon-btn${mobileEditorExpanded ? ' icon-btn--active' : ''}`}
+              onClick={() => setMobileEditorExpanded((v) => !v)}
+              title={mobileEditorExpanded ? 'Show lesson and editor' : 'Expand editor height'}
+              aria-label={mobileEditorExpanded ? 'Show lesson and editor' : 'Expand editor height'}
+              aria-pressed={mobileEditorExpanded}
+            >
+              ↕️
+            </button>
+          ) : null}
+          <button className="icon-btn" onClick={() => changeFontSize(-1)} title="Smaller font">➖</button>
+          <button className="icon-btn" onClick={() => changeFontSize(1)} title="Larger font">➕</button>
           <button className="run" onClick={runCode}>
             <svg viewBox="0 0 24 24" fill="currentColor" width="12" height="12">
               <polygon points="5,3 19,12 5,21" />
