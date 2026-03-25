@@ -96,7 +96,10 @@ export function Dashboard({
           <p className="dashboard-callout-text">
             I&apos;m <strong>Chris Seckler</strong>, a front-end developer. I was learning Python and
             NumPy and wanted a hands-on way to practice—so I built NumPy Dojo for myself. I&apos;m
-            sharing it with the community in the same spirit. For more on my work and background:
+            sharing it with the community in the same spirit.
+          </p>
+          <p className="dashboard-callout-text dashboard-callout-text--follow">
+            For more on my work and background:
           </p>
           <ul className="dashboard-author-links">
             <li>
