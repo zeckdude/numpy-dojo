@@ -433,6 +433,20 @@ main {
   outline-offset: 3px;
 }
 
+.scenario-intro-body img {
+  cursor: zoom-in;
+  transition: box-shadow 0.15s ease;
+}
+
+.scenario-intro-body img:hover {
+  box-shadow: 0 0 0 2px var(--accent-glow);
+}
+
+.scenario-intro-body img:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
 /* Why this matters — image lightbox */
 .why-matters-lightbox-overlay {
   display: none;

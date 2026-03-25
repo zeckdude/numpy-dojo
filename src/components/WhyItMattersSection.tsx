@@ -38,9 +38,22 @@ interface Props {
   html: string;
   /** If set, `<figure>` blocks whose `<img src>` is not listed are omitted (file missing under public/). */
   existingWhyIllustrationSrcs?: string[];
+  /** When false, render prose only (no `<details>`). Used for scenario Context. Default true. */
+  collapsible?: boolean;
+  summaryLabel?: string;
+  lightboxTitle?: string;
+  /** Wrapper class for the injected HTML. Defaults from `collapsible`. */
+  contentClassName?: string;
 }
 
-export function WhyItMattersSection({ html, existingWhyIllustrationSrcs }: Props) {
+export function WhyItMattersSection({
+  html,
+  existingWhyIllustrationSrcs,
+  collapsible = true,
+  summaryLabel = 'Why this matters',
+  lightboxTitle = 'Why this matters',
+  contentClassName,
+}: Props) {
   const bodyRef = useRef<HTMLDivElement>(null);
   const closeBtnRef = useRef<HTMLButtonElement>(null);
   const [lightbox, setLightbox] = useState<LightboxState | null>(null);
@@ -126,16 +139,27 @@ export function WhyItMattersSection({ html, existingWhyIllustrationSrcs }: Props
 
   const duplicateHtml = useMemo(() => proseWithoutFigures(displayHtml), [displayHtml]);
 
+  const proseWrapperClass =
+    contentClassName ?? (collapsible ? 'prose lesson-details-body' : 'prose scenario-intro-body');
+
+  const proseBlock = (
+    <div
+      ref={bodyRef}
+      className={proseWrapperClass}
+      dangerouslySetInnerHTML={{ __html: displayHtml }}
+    />
+  );
+
   return (
     <>
-      <details className="lesson-details">
-        <summary>Why this matters</summary>
-        <div
-          ref={bodyRef}
-          className="prose lesson-details-body"
-          dangerouslySetInnerHTML={{ __html: displayHtml }}
-        />
-      </details>
+      {collapsible ? (
+        <details className="lesson-details">
+          <summary>{summaryLabel}</summary>
+          {proseBlock}
+        </details>
+      ) : (
+        proseBlock
+      )}
 
       {lightbox ? (
         <div
@@ -154,7 +178,7 @@ export function WhyItMattersSection({ html, existingWhyIllustrationSrcs }: Props
           >
             <div className="why-matters-lightbox-header">
               <h3 id={titleId} className="why-matters-lightbox-title">
-                Why this matters
+                {lightboxTitle}
               </h3>
               <button
                 ref={closeBtnRef}

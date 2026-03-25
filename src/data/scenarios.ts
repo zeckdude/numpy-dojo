@@ -7,7 +7,7 @@ export const scenarios: Scenario[] = [
     id: 'student-grades',
     title: 'Student Grade Analysis',
     section: 'Data Analysis',
-    context: `<p>You&apos;re a teacher with exam scores for <strong>5 students</strong> across <strong>4 tests</strong>. You need to analyze performance, identify struggling students, and reason about the grade book as a single numerical object.</p><figure class="prose-figure"><img src="/illustrations/grades-matrix.svg" width="320" height="240" alt="Empty grid labeled 5 students by 4 tests representing a grades array with shape 5 comma 4." loading="lazy" decoding="async" /><figcaption>Think of the sheet as one 2D array: each row is a student, each column a test—then row means and boolean masks have a clear meaning.</figcaption></figure><p>This scenario uses the same patterns as the <strong>Aggregation</strong> and <strong>Boolean indexing</strong> lessons.</p>`,
+    context: `<p>You&apos;re a teacher with exam scores for <strong>5 students</strong> across <strong>4 tests</strong>. You need to analyze performance, identify struggling students, and reason about the grade book as a single numerical object.</p><figure class="prose-figure"><img src="/illustrations/grades-matrix.png" width="1200" height="896" alt="5 by 4 grade grid: each row is a student, each column a test; shape 5 comma 4." loading="lazy" decoding="async" /><figcaption>Think of the sheet as one 2D array: each row is a student, each column a test—then row means and boolean masks have a clear meaning.</figcaption></figure><p>This scenario uses the same patterns as the <strong>Aggregation</strong> and <strong>Boolean indexing</strong> lessons.</p>`,
     lessonsUsed: [0, 1, 5, 8],
     steps: [
       {

@@ -5,6 +5,7 @@ import { useState } from 'react';
 import { Scenario } from '../data/types';
 import { lessonSlugAt } from '../lib/routes';
 import { CodeEditor } from './CodeEditor';
+import { WhyItMattersSection } from './WhyItMattersSection';
 import { scenarioContextHtml } from '../lib/scenarioContext';
 
 interface Props {
@@ -44,9 +45,10 @@ export function ScenarioView({ scenario, savedCode, onSaveCode, completedScenari
 
         <div className="scenario-intro">
           <h4>📋 Context</h4>
-          <div
-            className="prose scenario-intro-body"
-            dangerouslySetInnerHTML={{ __html: scenarioContextHtml(scenario.context) }}
+          <WhyItMattersSection
+            html={scenarioContextHtml(scenario.context)}
+            collapsible={false}
+            lightboxTitle="Context"
           />
         </div>
 
