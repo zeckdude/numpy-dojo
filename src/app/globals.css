@@ -279,6 +279,22 @@ main {
   overflow-y: auto;
 }
 
+/* Lessons: scroll narrative + resources; task band pinned to bottom of pane */
+.learn.learn--lesson {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.learn.learn--lesson .lesson-scroll {
+  flex: 1;
+  min-height: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+  padding-bottom: 16px;
+}
+
 .badge {
   display: inline-block;
   font-size: 10px;
@@ -298,6 +314,89 @@ main {
   font-weight: 700;
   margin-bottom: 18px;
   line-height: 1.25;
+}
+
+/* Lesson narrative vs. task / hint / resources */
+.lesson-reading {
+  margin-bottom: 0;
+}
+
+/* Full-bleed band: matches .learn horizontal padding (32px); flush to bottom of .learn */
+.lesson-task-band {
+  flex-shrink: 0;
+  position: relative;
+  z-index: 4;
+  margin-top: 0;
+  margin-left: -32px;
+  margin-right: -32px;
+  margin-bottom: -28px;
+  padding: 18px 32px;
+  border-top: 1px solid var(--border);
+  background: var(--bg-card);
+  box-shadow: 0 -10px 36px rgba(0, 0, 0, 0.55);
+}
+
+.lesson-task-band .task {
+  margin-top: 0;
+}
+
+.lesson-hint-actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 14px;
+}
+
+.lesson-hint-actions .hint-btn,
+.lesson-hint-actions .sm-btn {
+  margin-top: 0;
+}
+
+.lesson-task-band .hint-box {
+  margin-top: 8px;
+}
+
+/* Resources — directly after Why this matters (in .lesson-scroll); collapsed by default */
+.lesson-details.lesson-resources-details {
+  margin: 18px 0 0;
+}
+
+.lesson-resources-details > summary {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.lesson-resources-details > summary::after {
+  float: none;
+  flex-shrink: 0;
+  margin-top: 3px;
+}
+
+.lesson-resources-summary-text {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.lesson-resources-summary-line {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.lesson-resources-summary-sub {
+  text-transform: none;
+  letter-spacing: normal;
+  line-height: 1.45;
+}
+
+.lesson-resources-body {
+  background: linear-gradient(145deg, rgba(94, 163, 248, 0.05), rgba(232, 132, 60, 0.04));
 }
 
 .prose { font-size: 14px; line-height: 1.8; color: var(--text-mid); }
@@ -614,28 +713,7 @@ main {
 
 .hint-box.show { display: block; }
 
-/* ━━━ LESSON — RESOURCE LINKS ━━━ */
-.lesson-docs {
-  margin-top: 22px;
-  padding: 16px 18px;
-  border-radius: 10px;
-  border: 1px solid var(--border);
-  background: linear-gradient(145deg, rgba(94, 163, 248, 0.06), rgba(232, 132, 60, 0.05));
-}
-
-.lesson-docs-heading {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: baseline;
-  gap: 8px 10px;
-  font-size: 12px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  color: var(--text-mid);
-  margin-bottom: 12px;
-}
-
+/* ━━━ LESSON — RESOURCE LINKS (list rows; heading lives in details summary) ━━━ */
 .lesson-docs-icon {
   font-size: 14px;
   line-height: 1;
@@ -1686,7 +1764,13 @@ a.module-card.module-card--link:focus-visible {
   }
   nav.mobile-open { transform: translateX(0); }
   .panes { grid-template-columns: 1fr !important; }
-  .learn { max-height: 45vh; overflow-y: auto; }
+  .learn { max-height: 45vh; }
+  .learn:not(.learn--lesson) {
+    overflow-y: auto;
+  }
+  .learn.learn--lesson {
+    overflow: hidden;
+  }
   .code-pane { border-left: none !important; border-top: 1px solid var(--border); }
   .meter-track { width: 80px; }
   .tab-btn { padding: 10px 14px; font-size: 12px; }
