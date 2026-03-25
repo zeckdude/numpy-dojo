@@ -435,6 +435,37 @@ main {
   overflow: hidden;
 }
 
+.panes-learn {
+  min-width: 0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.panes--resizable > .code-pane {
+  min-width: 0;
+  border-left: none;
+}
+
+.panes-gutter {
+  background: var(--border);
+  cursor: col-resize;
+  touch-action: none;
+  position: relative;
+  z-index: 6;
+  transition: background 0.12s;
+}
+
+.panes-gutter:hover,
+.panes--resizing .panes-gutter {
+  background: var(--accent);
+}
+
+.panes-gutter:focus-visible {
+  outline: 2px solid var(--blue);
+  outline-offset: -1px;
+}
+
 /* ━━━ LEARN PANE ━━━ */
 .learn {
   padding: 28px 32px;
@@ -2146,6 +2177,12 @@ a.module-card.module-card--link:focus-visible {
   }
   nav.mobile-open { transform: translateX(0); }
   .panes { grid-template-columns: 1fr !important; }
+  .panes--resizable .panes-gutter {
+    display: none !important;
+  }
+  .panes--resizable > .code-pane {
+    border-left: none;
+  }
   .learn { max-height: 45vh; }
   .learn:not(.learn--lesson) {
     overflow-y: auto;

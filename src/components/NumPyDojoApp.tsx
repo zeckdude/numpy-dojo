@@ -15,6 +15,7 @@ import { QuizView } from './QuizView';
 import { CodeEditor } from './CodeEditor';
 import { Toast } from './Toast';
 import { ThemeSwitch } from './ThemeSwitch';
+import { SplitPanes } from './SplitPanes';
 import { ShareSiteMenu } from './ShareSiteMenu';
 import { ConfirmDialog } from './ConfirmDialog';
 import {
@@ -402,37 +403,42 @@ export function NumPyDojoApp({
               </div>
 
               {activeTab === 'lessons' && (
-                <div className="panes" id="panes">
-                  <LessonView
-                    lesson={lessons[currentLesson]}
-                    index={currentLesson}
-                    isComplete={completedLessons.has(currentLesson)}
-                    existingWhyIllustrationSrcs={existingWhyIllustrationSrcs}
-                    docLinks={LESSON_DOC_LINKS[currentLesson] ?? []}
-                    onResetLesson={() =>
-                      setDialog({
-                        title: `Reset "${lessons[currentLesson].title}"`,
-                        msg: 'Clear progress and code for this lesson?',
-                        label: 'Reset Lesson',
-                        onConfirm: () => resetLesson(currentLesson),
-                      })
-                    }
-                  />
-                  <CodeEditor
-                    key={`lesson_${currentLesson}`}
-                    codeKey={`lesson_${currentLesson}`}
-                    savedCode={savedCode[`lesson_${currentLesson}`] || lessons[currentLesson].starter}
-                    validate={lessons[currentLesson].validate}
-                    onSaveCode={(code) => saveCodeForKey(`lesson_${currentLesson}`, code)}
-                    onPass={() => completeLesson(currentLesson)}
-                    onNext={
-                      currentLesson < lessons.length - 1
-                        ? () => router.push('/lessons/' + lessonSlugAt(currentLesson + 1))
-                        : undefined
-                    }
-                    toast={toast}
-                  />
-                </div>
+                <SplitPanes
+                  id="panes"
+                  left={
+                    <LessonView
+                      lesson={lessons[currentLesson]}
+                      index={currentLesson}
+                      isComplete={completedLessons.has(currentLesson)}
+                      existingWhyIllustrationSrcs={existingWhyIllustrationSrcs}
+                      docLinks={LESSON_DOC_LINKS[currentLesson] ?? []}
+                      onResetLesson={() =>
+                        setDialog({
+                          title: `Reset "${lessons[currentLesson].title}"`,
+                          msg: 'Clear progress and code for this lesson?',
+                          label: 'Reset Lesson',
+                          onConfirm: () => resetLesson(currentLesson),
+                        })
+                      }
+                    />
+                  }
+                  right={
+                    <CodeEditor
+                      key={`lesson_${currentLesson}`}
+                      codeKey={`lesson_${currentLesson}`}
+                      savedCode={savedCode[`lesson_${currentLesson}`] || lessons[currentLesson].starter}
+                      validate={lessons[currentLesson].validate}
+                      onSaveCode={(code) => saveCodeForKey(`lesson_${currentLesson}`, code)}
+                      onPass={() => completeLesson(currentLesson)}
+                      onNext={
+                        currentLesson < lessons.length - 1
+                          ? () => router.push('/lessons/' + lessonSlugAt(currentLesson + 1))
+                          : undefined
+                      }
+                      toast={toast}
+                    />
+                  }
+                />
               )}
 
               {activeTab === 'scenarios' && (

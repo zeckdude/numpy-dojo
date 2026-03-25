@@ -7,6 +7,7 @@ import { lessonSlugAt } from '../lib/routes';
 import { CodeEditor } from './CodeEditor';
 import { WhyItMattersSection } from './WhyItMattersSection';
 import { ShareSiteMenu } from './ShareSiteMenu';
+import { SplitPanes } from './SplitPanes';
 import { scenarioContextHtml } from '../lib/scenarioContext';
 
 interface Props {
@@ -39,8 +40,9 @@ export function ScenarioView({ scenario, savedCode, onSaveCode, completedScenari
   const codeKey = `scenario_${scenario.id}_step${currentStep}`;
 
   return (
-    <div className="panes">
-      <div className="learn">
+    <SplitPanes
+      left={
+        <div className="learn">
         <div className="learn-pill-row">
           <div className="badge">Scenario</div>
           <ShareSiteMenu
@@ -124,18 +126,20 @@ export function ScenarioView({ scenario, savedCode, onSaveCode, completedScenari
             ✅ Previously completed
           </div>
         )}
-      </div>
-
-      <CodeEditor
-        key={codeKey}
-        codeKey={codeKey}
-        savedCode={savedCode[codeKey] || step.starter}
-        validate={step.validate}
-        onSaveCode={(code) => onSaveCode(codeKey, code)}
-        onPass={handleStepPass}
-        onNext={currentStep < scenario.steps.length - 1 ? () => setCurrentStep(s => s + 1) : undefined}
-        toast={toast}
-      />
-    </div>
+        </div>
+      }
+      right={
+        <CodeEditor
+          key={codeKey}
+          codeKey={codeKey}
+          savedCode={savedCode[codeKey] || step.starter}
+          validate={step.validate}
+          onSaveCode={(code) => onSaveCode(codeKey, code)}
+          onPass={handleStepPass}
+          onNext={currentStep < scenario.steps.length - 1 ? () => setCurrentStep(s => s + 1) : undefined}
+          toast={toast}
+        />
+      }
+    />
   );
 }
