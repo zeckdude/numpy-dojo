@@ -1839,7 +1839,8 @@ textarea.editor::placeholder { color: var(--text-lo); }
 
 .dashboard-hero-meta {
   font-size: 13px;
-  color: var(--text-lo);
+  font-weight: 500;
+  color: var(--text-mid);
 }
 
 .dashboard-callouts {
