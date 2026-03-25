@@ -22,13 +22,18 @@ export function CodeEditor({ codeKey, savedCode, validate, onSaveCode, onPass, o
   const [outputOpen, setOutputOpen] = useState(true);
   const editorRef = useRef<HTMLTextAreaElement>(null);
 
-  // Reset state when codeKey changes
+  // Keep textarea in sync when switching exercise or when persisted code loads from storage.
   useEffect(() => {
     setCode(savedCode);
+  }, [codeKey, savedCode]);
+
+  // Clear run output only when the exercise changes — not when `savedCode` updates after Run
+  // (onSaveCode bumps `savedCode` and was incorrectly wiping fresh output on the same frame).
+  useEffect(() => {
     setOutput('Run your code to see output here.');
     setOutputClass('');
     setResult(null);
-  }, [codeKey, savedCode]);
+  }, [codeKey]);
 
   const runCode = useCallback(() => {
     onSaveCode(code);
