@@ -7,7 +7,8 @@
 html:not([data-theme]),
 html[data-theme='dark'] {
   color-scheme: dark;
-  --bg-deep: #06080d;
+  /* Page / learn-pane canvas — nudge lighter in steps (still below --bg-card) */
+  --bg-deep: #0a0f18;
   --bg-card: #0e1219;
   --bg-raised: #141a24;
   --bg-editor: #0a0d13;
