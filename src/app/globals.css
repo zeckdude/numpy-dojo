@@ -1,4 +1,12 @@
+/* Font size is set from JS; themes set all other surface tokens */
 :root {
+  --editor-fs: 13.5px;
+}
+
+/* Dark theme — :not covers pre-script / no-js; script sets data-theme before paint */
+html:not([data-theme]),
+html[data-theme='dark'] {
+  color-scheme: dark;
   --bg-deep: #06080d;
   --bg-card: #0e1219;
   --bg-raised: #141a24;
@@ -17,9 +25,55 @@
   --warn: #f5c542;
   --blue: #5ea3f8;
   --purple: #b07af5;
-  --editor-fs: 13.5px;
-  /* Wordmark "Dojo" — warm orange-tan (matches header reference) */
   --logo-dojo: #d6854c;
+  --on-accent-btn: #06080d;
+  --overlay-scrim: rgba(0, 0, 0, 0.72);
+  --dialog-scrim: rgba(0, 0, 0, 0.65);
+  --shadow-overlay: 0 24px 80px rgba(0, 0, 0, 0.55);
+  --shadow-dialog: 0 20px 60px rgba(0, 0, 0, 0.5);
+  --shadow-task-band: 0 -10px 36px rgba(0, 0, 0, 0.55);
+  --output-label-bg: rgba(0, 0, 0, 0.2);
+  --shadow-mobile-nav: 4px 0 20px rgba(0, 0, 0, 0.5);
+  --shadow-module-card: 0 8px 28px rgba(0, 0, 0, 0.25);
+  --resources-body-bg: linear-gradient(145deg, rgba(94, 163, 248, 0.05), rgba(232, 132, 60, 0.04));
+  --inline-code-bg: #0a0d13;
+  --scrollbar-thumb: #2a3344;
+}
+
+/* Light theme — bright UI; white page background */
+html[data-theme='light'] {
+  color-scheme: light;
+  --bg-deep: #ffffff;
+  --bg-card: #ffffff;
+  --bg-raised: #ececef;
+  --bg-editor: #ffffff;
+  --border: #c5cad6;
+  --text-hi: #0f172a;
+  --text-mid: #475569;
+  --text-lo: #94a3b8;
+  --accent: #c2410c;
+  --accent-dim: rgba(194, 65, 12, 0.12);
+  --accent-glow: rgba(194, 65, 12, 0.22);
+  --success: #059669;
+  --success-dim: rgba(5, 150, 105, 0.12);
+  --error: #dc2626;
+  --error-dim: rgba(220, 38, 38, 0.1);
+  --warn: #d97706;
+  --blue: #2563eb;
+  --purple: #7c3aed;
+  --logo-dojo: #b45309;
+  --on-accent-btn: #ffffff;
+  --overlay-scrim: rgba(15, 23, 42, 0.45);
+  --dialog-scrim: rgba(15, 23, 42, 0.4);
+  --shadow-overlay: 0 24px 80px rgba(15, 23, 42, 0.14);
+  --shadow-dialog: 0 20px 60px rgba(15, 23, 42, 0.12);
+  --shadow-task-band: 0 -10px 28px rgba(15, 23, 42, 0.1);
+  --output-label-bg: rgba(15, 23, 42, 0.06);
+  --shadow-mobile-nav: 4px 0 24px rgba(15, 23, 42, 0.12);
+  --shadow-module-card: 0 8px 28px rgba(15, 23, 42, 0.08);
+  --resources-body-bg: linear-gradient(145deg, rgba(37, 99, 235, 0.06), rgba(234, 88, 12, 0.05));
+  --inline-code-bg: #e8eaef;
+  --scrollbar-thumb: #b8bec9;
 }
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -34,7 +88,10 @@ body {
 
 ::-webkit-scrollbar { width: 5px; }
 ::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+::-webkit-scrollbar-thumb {
+  background: var(--scrollbar-thumb);
+  border-radius: 3px;
+}
 
 /* ━━━ APP LAYOUT ━━━ */
 .app {
@@ -153,6 +210,87 @@ a.path-step-btn {
 
 .hdr-btn:hover { border-color: var(--error); color: var(--error); }
 
+/* Theme: compact emoji trigger + dropdown */
+.theme-menu {
+  position: relative;
+  flex-shrink: 0;
+}
+
+.theme-menu-trigger {
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--bg-raised);
+  font-size: 17px;
+  line-height: 1;
+  cursor: pointer;
+  font-family: 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji', sans-serif;
+  transition: border-color 0.12s, background 0.12s;
+}
+
+.theme-menu-trigger:hover {
+  border-color: var(--text-lo);
+  background: var(--bg-card);
+}
+
+.theme-menu-trigger:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.theme-menu-dropdown {
+  position: absolute;
+  top: calc(100% + 6px);
+  right: 0;
+  z-index: 60;
+  min-width: 132px;
+  padding: 6px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  box-shadow: var(--shadow-dialog);
+}
+
+.theme-menu-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 8px 10px;
+  border: none;
+  border-radius: 6px;
+  background: transparent;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-mid);
+  cursor: pointer;
+  text-align: left;
+  transition: background 0.12s, color 0.12s;
+}
+
+.theme-menu-item:hover {
+  background: var(--bg-raised);
+  color: var(--text-hi);
+}
+
+.theme-menu-item.active {
+  color: var(--accent);
+  font-weight: 600;
+}
+
+.theme-menu-ico {
+  font-size: 16px;
+  line-height: 1;
+  width: 22px;
+  text-align: center;
+  font-family: 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji', sans-serif;
+}
+
 /* ━━━ TABS ━━━ */
 .tab-bar {
   display: flex;
@@ -238,7 +376,7 @@ nav {
 .nav-item.done .nav-dot {
   border-color: var(--success);
   background: var(--success);
-  color: var(--bg-deep);
+  color: #ffffff;
   font-size: 12px;
 }
 
@@ -340,7 +478,7 @@ main {
   padding: 18px 32px;
   border-top: 1px solid var(--border);
   background: var(--bg-card);
-  box-shadow: 0 -10px 36px rgba(0, 0, 0, 0.55);
+  box-shadow: var(--shadow-task-band);
 }
 
 .lesson-task-band .task {
@@ -403,7 +541,7 @@ main {
 }
 
 .lesson-resources-body {
-  background: linear-gradient(145deg, rgba(94, 163, 248, 0.05), rgba(232, 132, 60, 0.04));
+  background: var(--resources-body-bg);
 }
 
 .prose { font-size: 14px; line-height: 1.8; color: var(--text-mid); }
@@ -413,7 +551,7 @@ main {
 .prose code {
   font-family: 'JetBrains Mono', monospace;
   font-size: 12.5px;
-  background: var(--bg-deep);
+  background: var(--inline-code-bg);
   color: var(--purple);
   padding: 1px 6px;
   border-radius: 3px;
@@ -560,7 +698,7 @@ main {
   inset: 0;
   z-index: 120;
   padding: 24px 16px;
-  background: rgba(0, 0, 0, 0.72);
+  background: var(--overlay-scrim);
   place-items: center;
   overflow-y: auto;
 }
@@ -577,7 +715,7 @@ main {
   background: var(--bg-card);
   border: 1px solid var(--border);
   border-radius: 12px;
-  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.55);
+  box-shadow: var(--shadow-overlay);
   animation: popIn 0.2s ease;
 }
 
@@ -602,7 +740,7 @@ main {
   flex-shrink: 0;
   background: var(--accent);
   border: none;
-  color: var(--bg-deep);
+  color: var(--on-accent-btn);
   padding: 8px 18px;
   border-radius: 6px;
   font-family: inherit;
@@ -931,7 +1069,7 @@ textarea.editor::placeholder { color: var(--text-lo); }
 
 .next-btn {
   background: var(--success);
-  color: var(--bg-deep);
+  color: #ffffff;
   border: none;
   padding: 6px 16px;
   border-radius: 5px;
@@ -961,7 +1099,7 @@ textarea.editor::placeholder { color: var(--text-lo); }
   text-transform: uppercase;
   letter-spacing: 1px;
   color: var(--text-lo);
-  background: rgba(0, 0, 0, 0.2);
+  background: var(--output-label-bg);
   cursor: pointer;
   user-select: none;
 }
@@ -985,7 +1123,7 @@ textarea.editor::placeholder { color: var(--text-lo); }
   display: none;
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.65);
+  background: var(--dialog-scrim);
   z-index: 100;
   place-items: center;
 }
@@ -1000,7 +1138,7 @@ textarea.editor::placeholder { color: var(--text-lo); }
   max-width: 400px;
   width: 90%;
   animation: popIn 0.2s ease;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+  box-shadow: var(--shadow-dialog);
 }
 
 .dialog h3 { font-size: 16px; font-weight: 700; margin-bottom: 10px; }
@@ -1682,7 +1820,7 @@ textarea.editor::placeholder { color: var(--text-lo); }
 
 .module-card:hover {
   border-color: rgba(232, 132, 60, 0.35);
-  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.25);
+  box-shadow: var(--shadow-module-card);
 }
 
 a.module-card.module-card--link {
@@ -1767,7 +1905,7 @@ a.module-card.module-card--link:focus-visible {
     transform: translateX(-100%);
     transition: transform 0.25s ease;
     z-index: 50;
-    box-shadow: 4px 0 20px rgba(0, 0, 0, 0.5);
+    box-shadow: var(--shadow-mobile-nav);
   }
   nav.mobile-open { transform: translateX(0); }
   .panes { grid-template-columns: 1fr !important; }

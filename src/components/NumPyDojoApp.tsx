@@ -14,6 +14,7 @@ import { ScenarioView } from './ScenarioView';
 import { QuizView } from './QuizView';
 import { CodeEditor } from './CodeEditor';
 import { Toast } from './Toast';
+import { ThemeSwitch } from './ThemeSwitch';
 import { ConfirmDialog } from './ConfirmDialog';
 import {
   loadSet,
@@ -279,6 +280,7 @@ export function NumPyDojoApp({
             )}
           </div>
           <div className="header-right">
+            <ThemeSwitch />
             <div className="meter">
               <span className="meter-label">
                 <b>{totalComplete}</b> / {totalItems}

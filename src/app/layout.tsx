@@ -9,10 +9,28 @@ export const metadata: Metadata = {
   },
 };
 
+const themeInitScript = `
+try {
+  var t = localStorage.getItem('np_dojo_theme');
+  var theme;
+  if (t === 'light' || t === 'dark') {
+    theme = t;
+  } else {
+    if (t === 'system') localStorage.removeItem('np_dojo_theme');
+    theme = window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+  }
+  document.documentElement.setAttribute('data-theme', theme);
+} catch (e) {
+  document.documentElement.setAttribute('data-theme', 'dark');
+}
+`;
+
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
+        <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
+        <meta name="color-scheme" content="dark light" />
         <link
           href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600;700&family=Playfair+Display:wght@700;800&display=swap"
           rel="stylesheet"
