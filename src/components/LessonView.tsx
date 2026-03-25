@@ -24,66 +24,68 @@ export function LessonView({
   return (
     <div className="learn learn--lesson" key={index}>
       <div className="lesson-scroll">
-        <div className="lesson-reading">
-          <div className="badge">{lesson.badge}</div>
-          <h2>{lesson.title}</h2>
-          <div className="prose" dangerouslySetInnerHTML={{ __html: lesson.instruction }} />
-          {lesson.whyItMatters ? (
-            <WhyItMattersSection
-              html={lesson.whyItMatters}
-              existingWhyIllustrationSrcs={existingWhyIllustrationSrcs}
-            />
+        <div className="lesson-scroll-inner">
+          <div className="lesson-reading">
+            <div className="badge">{lesson.badge}</div>
+            <h2>{lesson.title}</h2>
+            <div className="prose" dangerouslySetInnerHTML={{ __html: lesson.instruction }} />
+            {lesson.whyItMatters ? (
+              <WhyItMattersSection
+                html={lesson.whyItMatters}
+                existingWhyIllustrationSrcs={existingWhyIllustrationSrcs}
+              />
+            ) : null}
+          </div>
+
+          {docLinks.length > 0 ? (
+            <details className="lesson-details lesson-resources-details">
+              <summary>
+                <span className="lesson-resources-summary-text">
+                  <span className="lesson-resources-summary-line">
+                    <span className="lesson-docs-icon" aria-hidden>
+                      🔗
+                    </span>
+                    Resources
+                  </span>
+                  <span className="lesson-docs-sub lesson-resources-summary-sub">
+                    Docs, references &amp; more — opens in a new tab
+                  </span>
+                </span>
+              </summary>
+              <div className="lesson-details-body lesson-resources-body">
+                <ul className="lesson-docs-list">
+                  {docLinks.map((link) => {
+                    const logo = docLinkLogoProps(link.href);
+                    return (
+                      <li key={link.href + link.label}>
+                        <a
+                          className="lesson-docs-link"
+                          href={link.href}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          <img
+                            className="lesson-docs-logo"
+                            src={logo.src}
+                            alt={logo.alt}
+                            width={72}
+                            height={22}
+                            loading="lazy"
+                            decoding="async"
+                          />
+                          <span className="lesson-docs-label">{link.label}</span>
+                          <span className="lesson-docs-external" aria-hidden>
+                            ↗
+                          </span>
+                        </a>
+                      </li>
+                    );
+                  })}
+                </ul>
+              </div>
+            </details>
           ) : null}
         </div>
-
-        {docLinks.length > 0 ? (
-          <details className="lesson-details lesson-resources-details">
-            <summary>
-              <span className="lesson-resources-summary-text">
-                <span className="lesson-resources-summary-line">
-                  <span className="lesson-docs-icon" aria-hidden>
-                    🔗
-                  </span>
-                  Resources
-                </span>
-                <span className="lesson-docs-sub lesson-resources-summary-sub">
-                  Docs, references &amp; more — opens in a new tab
-                </span>
-              </span>
-            </summary>
-            <div className="lesson-details-body lesson-resources-body">
-              <ul className="lesson-docs-list">
-                {docLinks.map((link) => {
-                  const logo = docLinkLogoProps(link.href);
-                  return (
-                    <li key={link.href + link.label}>
-                      <a
-                        className="lesson-docs-link"
-                        href={link.href}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
-                        <img
-                          className="lesson-docs-logo"
-                          src={logo.src}
-                          alt={logo.alt}
-                          width={72}
-                          height={22}
-                          loading="lazy"
-                          decoding="async"
-                        />
-                        <span className="lesson-docs-label">{link.label}</span>
-                        <span className="lesson-docs-external" aria-hidden>
-                          ↗
-                        </span>
-                      </a>
-                    </li>
-                  );
-                })}
-              </ul>
-            </div>
-          </details>
-        ) : null}
       </div>
 
       <div className="lesson-task-band">

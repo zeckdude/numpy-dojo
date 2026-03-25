@@ -285,6 +285,8 @@ main {
   flex-direction: column;
   min-height: 0;
   overflow: hidden;
+  /* No right padding: scrollbar sits on column edge next to code pane border */
+  padding: 28px 0 28px 32px;
 }
 
 .learn.learn--lesson .lesson-scroll {
@@ -293,6 +295,11 @@ main {
   overflow-x: hidden;
   overflow-y: auto;
   padding-bottom: 16px;
+}
+
+/* Inset scroll content from scrollbar (outer .lesson-scroll is edge-to-edge) */
+.learn.learn--lesson .lesson-scroll-inner {
+  padding-right: 32px;
 }
 
 .badge {
@@ -321,14 +328,14 @@ main {
   margin-bottom: 0;
 }
 
-/* Full-bleed band: matches .learn horizontal padding (32px); flush to bottom of .learn */
+/* Full-bleed band: cancel .learn--lesson left padding; right edge is already column edge */
 .lesson-task-band {
   flex-shrink: 0;
   position: relative;
   z-index: 4;
   margin-top: 0;
   margin-left: -32px;
-  margin-right: -32px;
+  margin-right: 0;
   margin-bottom: -28px;
   padding: 18px 32px;
   border-top: 1px solid var(--border);
