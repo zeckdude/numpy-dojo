@@ -48,6 +48,8 @@ html[data-theme='dark'] {
   --tab-inactive-hover: #d8dee9;
   /* Lesson Resources summary line (on accent-dim) — must clear peach tint on dark UI */
   --lesson-resources-subtitle: #c5cedc;
+  /* Figure captions: cooler/lighter than body --text-mid on dark surfaces */
+  --figure-caption: #c2ccdc;
 }
 
 /* Light theme — bright UI; white page background */
@@ -90,6 +92,8 @@ html[data-theme='light'] {
   --tab-inactive: #5d6778;
   --tab-inactive-hover: #334155;
   --lesson-resources-subtitle: #3d4d60;
+  /* Softer slate than body --text-mid so caption reads as supporting copy */
+  --figure-caption: #6e7d91;
 }
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -682,13 +686,21 @@ main {
   border-radius: 6px;
 }
 
+/* Captions: smaller + --figure-caption (hue/lightness vs body --text-mid) */
 .prose figcaption,
 .prose-figure figcaption {
   margin-top: 12px;
-  font-size: 12px;
+  font-size: 11px;
   line-height: 1.55;
-  color: var(--text-lo);
+  font-weight: 400;
+  color: var(--figure-caption);
   text-align: left;
+}
+
+.prose-figure figcaption {
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid var(--border);
 }
 
 .lesson-details {
@@ -876,9 +888,12 @@ main {
 
 .why-matters-lightbox-copy .lightbox-prose-figcaption {
   margin: 14px 0 0;
-  font-size: 12px;
+  padding-top: 12px;
+  border-top: 1px solid var(--border);
+  font-size: 11px;
   line-height: 1.55;
-  color: var(--text-lo);
+  font-weight: 400;
+  color: var(--figure-caption);
 }
 
 .task {
