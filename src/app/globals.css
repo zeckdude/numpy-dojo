@@ -1606,6 +1606,171 @@ textarea.editor::placeholder { color: var(--text-lo); }
   color: var(--text-lo);
 }
 
+.dashboard-callouts {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-bottom: 40px;
+}
+
+.dashboard-callout {
+  margin: 0;
+  padding: 22px 24px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  border-left-width: 4px;
+  border-left-color: var(--accent);
+  background: var(--bg-card);
+  box-shadow: var(--shadow-module-card);
+}
+
+.dashboard-callout--author {
+  border-left-color: var(--blue);
+}
+
+.dashboard-callout-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text-hi);
+  margin: 0 0 10px;
+  line-height: 1.35;
+}
+
+.dashboard-callout-text {
+  font-size: 14px;
+  line-height: 1.75;
+  color: var(--text-mid);
+  margin: 0;
+}
+
+.dashboard-callout-text strong {
+  color: var(--text-hi);
+  font-weight: 600;
+}
+
+.dashboard-callout-text--follow {
+  margin-top: 14px;
+}
+
+.dashboard-callout-share {
+  margin-top: 14px;
+}
+
+/* Share menu (free callout) */
+.dashboard-share-menu {
+  position: relative;
+  display: inline-block;
+}
+
+.dashboard-share-trigger {
+  background: var(--accent);
+  color: var(--on-accent-btn);
+  border: none;
+  padding: 8px 18px;
+  border-radius: 6px;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: filter 0.15s;
+}
+
+.dashboard-share-trigger:hover {
+  filter: brightness(1.08);
+}
+
+.dashboard-share-trigger:focus-visible {
+  outline: 2px solid var(--blue);
+  outline-offset: 2px;
+}
+
+.dashboard-share-panel {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  z-index: 40;
+  min-width: 200px;
+  padding: 6px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  box-shadow: var(--shadow-dialog);
+}
+
+.dashboard-share-item {
+  display: block;
+  width: 100%;
+  padding: 8px 12px;
+  border: none;
+  border-radius: 6px;
+  background: transparent;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-mid);
+  text-align: left;
+  cursor: pointer;
+  text-decoration: none;
+  transition: background 0.12s, color 0.12s;
+}
+
+.dashboard-share-item:hover {
+  background: var(--bg-raised);
+  color: var(--text-hi);
+}
+
+.dashboard-share-item:focus-visible {
+  outline: 2px solid var(--blue);
+  outline-offset: 0;
+}
+
+.dashboard-author-links {
+  list-style: none;
+  padding: 0;
+  margin: 14px 0 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 20px;
+}
+
+.dashboard-author-links a {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--blue);
+  text-decoration: none;
+}
+
+.dashboard-author-link-icon {
+  flex-shrink: 0;
+  width: 22px;
+  height: 22px;
+  object-fit: contain;
+  display: block;
+}
+
+/* GitHub mark is dark; invert on dark UI so it reads on the card */
+html:not([data-theme]) .dashboard-author-link-icon--github,
+html[data-theme='dark'] .dashboard-author-link-icon--github {
+  filter: invert(1);
+}
+
+.dashboard-author-links a:hover {
+  text-decoration: underline;
+}
+
+.dashboard-author-links a:hover .dashboard-author-link-icon {
+  opacity: 0.92;
+}
+
+.dashboard-author-links a:focus-visible {
+  outline: 2px solid var(--blue);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
 .dashboard-section-title {
   font-family: 'Playfair Display', serif;
   font-size: 20px;

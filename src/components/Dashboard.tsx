@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { useState } from 'react';
 import { ModuleSummary } from '../data/modules';
 import { lessonSlugAt } from '../lib/routes';
+import { ShareSiteMenu } from './ShareSiteMenu';
 
 export interface ScenarioCardSummary {
   index: number;
@@ -69,6 +70,85 @@ export function Dashboard({
           </span>
         </div>
       </section>
+
+      <div className="dashboard-callouts">
+        <aside className="dashboard-callout" aria-labelledby="dashboard-callout-heading">
+          <h3 id="dashboard-callout-heading" className="dashboard-callout-title">
+            Free for every developer
+          </h3>
+          <p className="dashboard-callout-text">
+            <strong>NumPy Dojo is free</strong> for anyone who wants to learn NumPy hands-on—no
+            paywall, no account.
+          </p>
+          <p className="dashboard-callout-text dashboard-callout-text--follow">
+            If it&apos;s useful to you, pass the word to a friend or teammate who&apos;s learning
+            too.
+          </p>
+          <div className="dashboard-callout-share">
+            <ShareSiteMenu />
+          </div>
+        </aside>
+
+        <aside className="dashboard-callout dashboard-callout--author" aria-labelledby="dashboard-author-heading">
+          <h3 id="dashboard-author-heading" className="dashboard-callout-title">
+            About the developer
+          </h3>
+          <p className="dashboard-callout-text">
+            I&apos;m <strong>Chris Seckler</strong>, a front-end developer. I was learning Python and
+            NumPy and wanted a hands-on way to practice—so I built NumPy Dojo for myself. I&apos;m
+            sharing it with the community in the same spirit. For more on my work and background:
+          </p>
+          <ul className="dashboard-author-links">
+            <li>
+              <a href="https://github.com/zeckdude" target="_blank" rel="noopener noreferrer">
+                <img
+                  className="dashboard-author-link-icon dashboard-author-link-icon--github"
+                  src="/logos/github-logo.svg"
+                  alt=""
+                  width={22}
+                  height={22}
+                  decoding="async"
+                />
+                GitHub
+              </a>
+            </li>
+            <li>
+              <a
+                href="https://stackoverflow.com/users/83916/zeckdude"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <img
+                  className="dashboard-author-link-icon"
+                  src="/logos/stack-overflow-logo.svg"
+                  alt=""
+                  width={22}
+                  height={22}
+                  decoding="async"
+                />
+                Stack Overflow
+              </a>
+            </li>
+            <li>
+              <a
+                href="https://www.linkedin.com/in/chrisseckler/"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <img
+                  className="dashboard-author-link-icon"
+                  src="/logos/linkedin-logo.svg"
+                  alt=""
+                  width={22}
+                  height={22}
+                  decoding="async"
+                />
+                LinkedIn
+              </a>
+            </li>
+          </ul>
+        </aside>
+      </div>
 
       <section className="dashboard-path" aria-labelledby="path-heading">
         <h3 id="path-heading" className="dashboard-section-title">
