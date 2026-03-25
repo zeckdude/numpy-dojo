@@ -1,6 +1,7 @@
 'use client';
 
-import { Lesson } from '../data/types';
+import { Lesson, LessonDocLink } from '../data/types';
+import { docLinkLogoProps } from '../lib/docLinkSources';
 import { WhyItMattersSection } from './WhyItMattersSection';
 
 interface Props {
@@ -9,6 +10,7 @@ interface Props {
   isComplete: boolean;
   onResetLesson: () => void;
   existingWhyIllustrationSrcs?: string[];
+  docLinks: LessonDocLink[];
 }
 
 export function LessonView({
@@ -17,6 +19,7 @@ export function LessonView({
   isComplete,
   onResetLesson,
   existingWhyIllustrationSrcs,
+  docLinks,
 }: Props) {
   return (
     <div className="learn" key={index}>
@@ -51,6 +54,47 @@ export function LessonView({
         )}
       </div>
       <div className="hint-box">{lesson.hint}</div>
+
+      {docLinks.length > 0 ? (
+        <div className="lesson-docs">
+          <div className="lesson-docs-heading">
+            <span className="lesson-docs-icon" aria-hidden>
+              🔗
+            </span>
+            <span>Resources</span>
+            <span className="lesson-docs-sub">Docs, references &amp; more — opens in a new tab</span>
+          </div>
+          <ul className="lesson-docs-list">
+            {docLinks.map((link) => {
+              const logo = docLinkLogoProps(link.href);
+              return (
+                <li key={link.href + link.label}>
+                  <a
+                    className="lesson-docs-link"
+                    href={link.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <img
+                      className="lesson-docs-logo"
+                      src={logo.src}
+                      alt={logo.alt}
+                      width={72}
+                      height={22}
+                      loading="lazy"
+                      decoding="async"
+                    />
+                    <span className="lesson-docs-label">{link.label}</span>
+                    <span className="lesson-docs-external" aria-hidden>
+                      ↗
+                    </span>
+                  </a>
+                </li>
+              );
+            })}
+          </ul>
+        </div>
+      ) : null}
     </div>
   );
 }

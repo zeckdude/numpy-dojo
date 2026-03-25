@@ -600,6 +600,95 @@ main {
 
 .hint-box.show { display: block; }
 
+/* ━━━ LESSON — RESOURCE LINKS ━━━ */
+.lesson-docs {
+  margin-top: 22px;
+  padding: 16px 18px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: linear-gradient(145deg, rgba(94, 163, 248, 0.06), rgba(232, 132, 60, 0.05));
+}
+
+.lesson-docs-heading {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 8px 10px;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-mid);
+  margin-bottom: 12px;
+}
+
+.lesson-docs-icon {
+  font-size: 14px;
+  line-height: 1;
+}
+
+.lesson-docs-sub {
+  font-weight: 500;
+  text-transform: none;
+  letter-spacing: 0;
+  color: var(--text-lo);
+  font-size: 11px;
+}
+
+.lesson-docs-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.lesson-docs-link {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 12px;
+  border-radius: 8px;
+  background: var(--bg-raised);
+  border: 1px solid var(--border);
+  color: var(--text-hi);
+  text-decoration: none;
+  font-size: 13px;
+  transition: border-color 0.15s, background 0.15s;
+}
+
+.lesson-docs-link:hover {
+  border-color: var(--blue);
+  background: rgba(94, 163, 248, 0.08);
+}
+
+.lesson-docs-logo {
+  height: 22px;
+  width: auto;
+  max-width: 72px;
+  object-fit: contain;
+  object-position: left center;
+  flex-shrink: 0;
+}
+
+.lesson-docs-label {
+  flex: 1;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  color: var(--text-mid);
+}
+
+.lesson-docs-link:hover .lesson-docs-label {
+  color: var(--text-hi);
+}
+
+.lesson-docs-external {
+  font-size: 11px;
+  color: var(--text-lo);
+  flex-shrink: 0;
+}
+
 .icon-btn {
   background: none;
   border: 1px solid var(--border);

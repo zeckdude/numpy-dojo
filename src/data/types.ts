@@ -1,5 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
+/** External resource link (opens in new tab). Logo is chosen from URL via `docLinkSources`. */
+export interface LessonDocLink {
+  label: string;
+  href: string;
+}
+
 export interface Lesson {
   section: string;
   title: string;

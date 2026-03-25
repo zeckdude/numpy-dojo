@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useState, useEffect, useLayoutEffect, useCallback, useMemo } from 'react';
 import { lessons } from '../data/lessons';
+import { LESSON_DOC_LINKS } from '../data/lessonDocLinks';
 import { scenarios } from '../data/scenarios';
 import { getModulesFromLessons } from '../data/modules';
 import { Sidebar } from './Sidebar';
@@ -368,6 +369,7 @@ export function NumPyDojoApp({
                     index={currentLesson}
                     isComplete={completedLessons.has(currentLesson)}
                     existingWhyIllustrationSrcs={existingWhyIllustrationSrcs}
+                    docLinks={LESSON_DOC_LINKS[currentLesson] ?? []}
                     onResetLesson={() =>
                       setDialog({
                         title: `Reset "${lessons[currentLesson].title}"`,
