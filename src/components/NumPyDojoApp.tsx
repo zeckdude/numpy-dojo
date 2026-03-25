@@ -15,6 +15,7 @@ import { QuizView } from './QuizView';
 import { CodeEditor } from './CodeEditor';
 import { Toast } from './Toast';
 import { ThemeSwitch } from './ThemeSwitch';
+import { ShareSiteMenu } from './ShareSiteMenu';
 import { ConfirmDialog } from './ConfirmDialog';
 import {
   loadSet,
@@ -259,6 +260,39 @@ export function NumPyDojoApp({
     []
   );
 
+  const headerShareProps = useMemo(() => {
+    if (route.kind === 'lesson') {
+      const lesson = lessons[currentLesson];
+      return {
+        title: `${lesson.title} · NumPy Dojo`,
+        text: `Practice "${lesson.title}" on NumPy Dojo—free lesson with a live NumPy editor.`,
+        ariaLabel: `Share this lesson: ${lesson.title}`,
+        triggerLabel: 'Share' as const,
+        variant: 'compact' as const,
+      };
+    }
+    if (route.kind === 'scenario') {
+      const scenario = scenarios[currentScenario];
+      return {
+        title: `${scenario.title} · NumPy Dojo`,
+        text: `Try the scenario "${scenario.title}" on NumPy Dojo—short multi-step NumPy exercises.`,
+        ariaLabel: `Share this scenario: ${scenario.title}`,
+        triggerLabel: 'Share' as const,
+        variant: 'compact' as const,
+      };
+    }
+    if (route.kind === 'quiz') {
+      return {
+        title: 'NumPy Dojo — Quizzes',
+        text: 'Free NumPy quizzes with instant feedback on NumPy Dojo.',
+        ariaLabel: 'Share NumPy Dojo quizzes',
+        triggerLabel: 'Share' as const,
+        variant: 'compact' as const,
+      };
+    }
+    return null;
+  }, [route.kind, currentLesson, currentScenario]);
+
   return (
     <>
       <div className={`app ${dojoOpen ? '' : 'app--dashboard'}`}>
@@ -281,6 +315,9 @@ export function NumPyDojoApp({
           </div>
           <div className="header-right">
             <ThemeSwitch />
+            {dojoOpen && headerShareProps ? (
+              <ShareSiteMenu {...headerShareProps} className="dashboard-share-menu--header" />
+            ) : null}
             <div className="meter">
               <span className="meter-label">
                 <b>{totalComplete}</b> / {totalItems}

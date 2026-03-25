@@ -2,16 +2,38 @@
 
 import { useEffect, useRef, useState } from 'react';
 
-const SHARE_TITLE = 'NumPy Dojo';
-const SHARE_TEXT =
+export const DEFAULT_SHARE_TITLE = 'NumPy Dojo';
+export const DEFAULT_SHARE_TEXT =
   'Free hands-on NumPy lessons with a live editor—no paywall, no account.';
 
-function pageUrl() {
+function resolveUrl(explicit?: string) {
+  if (explicit) return explicit;
   if (typeof window === 'undefined') return '';
   return window.location.href;
 }
 
-export function ShareSiteMenu() {
+export type ShareSiteMenuVariant = 'cta' | 'compact';
+
+export interface ShareSiteMenuProps {
+  title?: string;
+  text?: string;
+  /** If omitted, uses `window.location.href` when the user copies or shares. */
+  url?: string;
+  triggerLabel?: string;
+  ariaLabel?: string;
+  variant?: ShareSiteMenuVariant;
+  className?: string;
+}
+
+export function ShareSiteMenu({
+  title = DEFAULT_SHARE_TITLE,
+  text = DEFAULT_SHARE_TEXT,
+  url: urlProp,
+  triggerLabel = 'Share',
+  ariaLabel = 'Share NumPy Dojo',
+  variant = 'cta',
+  className,
+}: ShareSiteMenuProps) {
   const [open, setOpen] = useState(false);
   const [copied, setCopied] = useState(false);
   const rootRef = useRef<HTMLDivElement>(null);
@@ -32,13 +54,15 @@ export function ShareSiteMenu() {
     };
   }, [open]);
 
+  const effectiveUrl = () => resolveUrl(urlProp);
+
   const handleSystemShare = async () => {
-    const url = pageUrl();
+    const url = effectiveUrl();
     if (!navigator.share) return;
     try {
       await navigator.share({
-        title: SHARE_TITLE,
-        text: SHARE_TEXT,
+        title,
+        text,
         url,
       });
       setOpen(false);
@@ -49,7 +73,7 @@ export function ShareSiteMenu() {
   };
 
   const handleCopy = async () => {
-    const url = pageUrl();
+    const url = effectiveUrl();
     try {
       await navigator.clipboard.writeText(url);
       setCopied(true);
@@ -59,26 +83,33 @@ export function ShareSiteMenu() {
     }
   };
 
-  const url = pageUrl();
-  const encUrl = encodeURIComponent(url);
-  const encText = encodeURIComponent(SHARE_TEXT);
+  const u = resolveUrl(urlProp);
+  const encUrl = encodeURIComponent(u);
+  const encText = encodeURIComponent(text);
   const twitterHref = `https://twitter.com/intent/tweet?text=${encText}&url=${encUrl}`;
   const linkedinHref = `https://www.linkedin.com/sharing/share-offsite/?url=${encUrl}`;
 
   const canNativeShare =
     typeof navigator !== 'undefined' && typeof navigator.share === 'function';
 
+  const triggerClass =
+    variant === 'compact'
+      ? 'dashboard-share-trigger dashboard-share-trigger--compact'
+      : 'dashboard-share-trigger';
+
+  const rootClass = ['dashboard-share-menu', className ?? ''].filter(Boolean).join(' ');
+
   return (
-    <div className="dashboard-share-menu" ref={rootRef}>
+    <div className={rootClass} ref={rootRef}>
       <button
         type="button"
-        className="dashboard-share-trigger"
+        className={triggerClass}
         aria-expanded={open}
         aria-haspopup="menu"
-        aria-label="Share NumPy Dojo"
+        aria-label={ariaLabel}
         onClick={() => setOpen((v) => !v)}
       >
-        Share
+        {triggerLabel}
       </button>
       {open ? (
         <div className="dashboard-share-panel" role="menu" aria-label="Share options">

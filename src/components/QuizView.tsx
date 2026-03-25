@@ -6,6 +6,7 @@ import { quizPool } from '../data/quizzes';
 import { QuizQuestion } from '../data/types';
 import { lessonSlugAt } from '../lib/routes';
 import { loadQuizHistory, saveQuizHistory, QuizHistoryEntry } from '../lib/storage';
+import { ShareSiteMenu } from './ShareSiteMenu';
 
 interface Props {
   toast: (msg: string) => void;
@@ -193,6 +194,15 @@ export function QuizView({ toast }: Props) {
 
             <button className="quiz-start-btn" onClick={startQuiz}>Start Quiz</button>
 
+            <div style={{ marginTop: 16, display: 'flex', justifyContent: 'center' }}>
+              <ShareSiteMenu
+                title="NumPy Dojo — Quizzes"
+                text="Free NumPy quizzes with instant feedback on NumPy Dojo."
+                ariaLabel="Share NumPy Dojo quizzes"
+                variant="compact"
+              />
+            </div>
+
             {history.length > 0 && (
               <div style={{ marginTop: 40, textAlign: 'left' }}>
                 <h3 style={{ fontSize: 16, marginBottom: 16, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -283,9 +293,25 @@ export function QuizView({ toast }: Props) {
             </div>
           ))}
 
-          <div style={{ textAlign: 'center', marginTop: 24, display: 'flex', gap: 12, justifyContent: 'center' }}>
+          <div
+            style={{
+              textAlign: 'center',
+              marginTop: 24,
+              display: 'flex',
+              gap: 12,
+              justifyContent: 'center',
+              alignItems: 'center',
+              flexWrap: 'wrap',
+            }}
+          >
             <button className="quiz-start-btn" onClick={startQuiz}>Take Another Quiz</button>
             <button className="sm-btn" onClick={() => setPhase('setup')} style={{ marginTop: 0 }}>Back to Setup</button>
+            <ShareSiteMenu
+              title="NumPy Dojo — Quizzes"
+              text="Free NumPy quizzes with instant feedback on NumPy Dojo."
+              ariaLabel="Share NumPy Dojo quizzes"
+              variant="compact"
+            />
           </div>
         </div>
       </div>

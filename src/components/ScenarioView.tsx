@@ -6,6 +6,7 @@ import { Scenario } from '../data/types';
 import { lessonSlugAt } from '../lib/routes';
 import { CodeEditor } from './CodeEditor';
 import { WhyItMattersSection } from './WhyItMattersSection';
+import { ShareSiteMenu } from './ShareSiteMenu';
 import { scenarioContextHtml } from '../lib/scenarioContext';
 
 interface Props {
@@ -40,7 +41,15 @@ export function ScenarioView({ scenario, savedCode, onSaveCode, completedScenari
   return (
     <div className="panes">
       <div className="learn">
-        <div className="badge">Scenario</div>
+        <div className="learn-pill-row">
+          <div className="badge">Scenario</div>
+          <ShareSiteMenu
+            title={`${scenario.title} · NumPy Dojo`}
+            text={`Try the scenario "${scenario.title}" on NumPy Dojo—short multi-step NumPy exercises.`}
+            ariaLabel={`Share this scenario: ${scenario.title}`}
+            variant="compact"
+          />
+        </div>
         <h2>{scenario.title}</h2>
 
         <div className="scenario-intro">

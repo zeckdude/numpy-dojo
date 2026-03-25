@@ -3,6 +3,7 @@
 import { Lesson, LessonDocLink } from '../data/types';
 import { docLinkLogoProps } from '../lib/docLinkSources';
 import { WhyItMattersSection } from './WhyItMattersSection';
+import { ShareSiteMenu } from './ShareSiteMenu';
 
 interface Props {
   lesson: Lesson;
@@ -26,7 +27,15 @@ export function LessonView({
       <div className="lesson-scroll">
         <div className="lesson-scroll-inner">
           <div className="lesson-reading">
-            <div className="badge">{lesson.badge}</div>
+            <div className="learn-pill-row">
+              <div className="badge">{lesson.badge}</div>
+              <ShareSiteMenu
+                title={`${lesson.title} · NumPy Dojo`}
+                text={`Practice "${lesson.title}" on NumPy Dojo—free lesson with a live NumPy editor.`}
+                ariaLabel={`Share this lesson: ${lesson.title}`}
+                variant="compact"
+              />
+            </div>
             <h2>{lesson.title}</h2>
             <div className="prose" dangerouslySetInnerHTML={{ __html: lesson.instruction }} />
             {lesson.whyItMatters ? (

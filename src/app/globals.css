@@ -27,7 +27,8 @@ html[data-theme='dark'] {
   --blue: #5ea3f8;
   --purple: #b07af5;
   --logo-dojo: #d6854c;
-  --on-accent-btn: #06080d;
+  /* White on accent — matches hero CTA; readable on dark-theme orange */
+  --on-accent-btn: #ffffff;
   --overlay-scrim: rgba(0, 0, 0, 0.72);
   --dialog-scrim: rgba(0, 0, 0, 0.65);
   --shadow-overlay: 0 24px 80px rgba(0, 0, 0, 0.55);
@@ -42,6 +43,11 @@ html[data-theme='dark'] {
   /* Header progress meter: lighter trough on --bg-card so length + fill read clearly */
   --meter-track-bg: #252f42;
   --meter-track-rim: rgba(234, 239, 246, 0.14);
+  /* Tab bar: inactive labels (avoid --text-lo on dark chrome — too low contrast) */
+  --tab-inactive: #9aa8bc;
+  --tab-inactive-hover: #d8dee9;
+  /* Lesson Resources summary line (on accent-dim) — must clear peach tint on dark UI */
+  --lesson-resources-subtitle: #c5cedc;
 }
 
 /* Light theme — bright UI; white page background */
@@ -81,6 +87,9 @@ html[data-theme='light'] {
   /* Header progress meter: contrasts with white header (--bg-card / --bg-deep) */
   --meter-track-bg: #d1d9e6;
   --meter-track-rim: var(--border);
+  --tab-inactive: #5d6778;
+  --tab-inactive-hover: #334155;
+  --lesson-resources-subtitle: #3d4d60;
 }
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -312,21 +321,28 @@ a.path-step-btn {
   background: none;
   border: none;
   border-bottom: 2px solid transparent;
-  color: var(--text-lo);
+  color: var(--tab-inactive);
   font-family: inherit;
   font-size: 13px;
   font-weight: 600;
   padding: 12px 20px;
   cursor: pointer;
-  transition: 0.15s;
+  transition: color 0.15s, border-color 0.15s;
   white-space: nowrap;
 }
 
-.tab-btn:hover { color: var(--text-mid); }
+.tab-btn:hover:not(.active) {
+  color: var(--tab-inactive-hover);
+}
 
 .tab-btn.active {
   color: var(--accent);
   border-bottom-color: var(--accent);
+}
+
+.tab-btn.active:hover {
+  color: var(--accent);
+  filter: brightness(1.06);
 }
 
 /* ━━━ SIDEBAR ━━━ */
@@ -459,6 +475,28 @@ main {
   padding: 3px 10px;
   border-radius: 12px;
   margin-bottom: 14px;
+}
+
+/* Pill + share on one line (lessons, scenarios) */
+.learn-pill-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.learn-pill-row .badge {
+  margin-bottom: 0;
+}
+
+.learn-pill-row .dashboard-share-menu {
+  flex-shrink: 0;
+}
+
+.learn-pill-row .dashboard-share-panel {
+  right: 0;
+  left: auto;
 }
 
 .learn h2 {
@@ -878,6 +916,11 @@ main {
   letter-spacing: 0;
   color: var(--text-lo);
   font-size: 11px;
+}
+
+/* Beats .lesson-docs-sub alone (Resources summary uses both classes) */
+.lesson-resources-details .lesson-resources-summary-sub.lesson-docs-sub {
+  color: var(--lesson-resources-subtitle);
 }
 
 .lesson-docs-list {
@@ -1584,9 +1627,11 @@ textarea.editor::placeholder { color: var(--text-lo); }
   gap: 16px;
 }
 
-.dashboard-cta {
+/* Primary accent actions (hero CTA, dashboard share, etc.) — same in light and dark */
+.dashboard-cta,
+.dashboard-share-trigger:not(.dashboard-share-trigger--compact) {
   background: var(--accent);
-  color: #fff;
+  color: var(--on-accent-btn);
   border: none;
   padding: 12px 26px;
   border-radius: 8px;
@@ -1594,11 +1639,18 @@ textarea.editor::placeholder { color: var(--text-lo); }
   font-size: 14px;
   font-weight: 700;
   cursor: pointer;
-  transition: 0.15s;
+  transition: filter 0.15s;
 }
 
-.dashboard-cta:hover {
+.dashboard-cta:hover,
+.dashboard-share-trigger:not(.dashboard-share-trigger--compact):hover {
   filter: brightness(1.1);
+}
+
+.dashboard-cta:focus-visible,
+.dashboard-share-trigger:not(.dashboard-share-trigger--compact):focus-visible {
+  outline: 2px solid var(--blue);
+  outline-offset: 2px;
 }
 
 .dashboard-hero-meta {
@@ -1662,26 +1714,38 @@ textarea.editor::placeholder { color: var(--text-lo); }
   display: inline-block;
 }
 
-.dashboard-share-trigger {
-  background: var(--accent);
-  color: var(--on-accent-btn);
-  border: none;
-  padding: 8px 18px;
-  border-radius: 6px;
-  font-family: inherit;
-  font-size: 13px;
+/* Compact trigger (header, lesson band, scenarios, quizzes) — matches .hdr-btn */
+.dashboard-share-trigger--compact {
+  background: none;
+  border: 1px solid var(--border);
+  color: var(--text-lo);
+  padding: 4px 12px;
+  border-radius: 4px;
+  font-size: 11px;
   font-weight: 600;
   cursor: pointer;
-  transition: filter 0.15s;
 }
 
-.dashboard-share-trigger:hover {
-  filter: brightness(1.08);
+.dashboard-share-trigger--compact:hover {
+  filter: none;
+  border-color: var(--text-mid);
+  color: var(--text-mid);
 }
 
-.dashboard-share-trigger:focus-visible {
+.dashboard-share-trigger--compact:focus-visible {
   outline: 2px solid var(--blue);
   outline-offset: 2px;
+}
+
+/* Header: sit above main/sidebar; panel aligns to trigger’s right edge */
+.dashboard-share-menu--header {
+  z-index: 60;
+}
+
+.dashboard-share-menu--header .dashboard-share-panel {
+  right: 0;
+  left: auto;
+  z-index: 70;
 }
 
 .dashboard-share-panel {
