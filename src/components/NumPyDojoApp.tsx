@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { useState, useEffect, useCallback, useMemo } from 'react';
+import { useState, useEffect, useLayoutEffect, useCallback, useMemo } from 'react';
 import { lessons } from '../data/lessons';
 import { scenarios } from '../data/scenarios';
 import { getModulesFromLessons } from '../data/modules';
@@ -73,8 +73,6 @@ export function NumPyDojoApp({
     label: string;
     onConfirm: () => void;
   } | null>(null);
-  const [mounted, setMounted] = useState(false);
-
   useEffect(() => {
     setCompletedLessons(loadSet('np_dojo'));
     setCompletedScenarios(new Set(loadJSON<string[]>('np_dojo_scenarios', [])));
@@ -102,31 +100,27 @@ export function NumPyDojoApp({
         }
       }
     }
-
-    setMounted(true);
   }, []);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (lessonSlug === null) return;
     const idx = lessonIndexFromSlug(lessonSlug);
     if (idx !== null) setCurrentLesson(idx);
   }, [lessonSlug]);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (scenarioId === null) return;
     const idx = scenarioIndexFromId(scenarioId);
     if (idx !== null) setCurrentScenario(idx);
   }, [scenarioId]);
 
   useEffect(() => {
-    if (!mounted) return;
     saveString(KEY_LAST_LESSON_SLUG, lessonSlugAt(currentLesson));
-  }, [currentLesson, mounted]);
+  }, [currentLesson]);
 
   useEffect(() => {
-    if (!mounted) return;
     saveString(KEY_LAST_SCENARIO_ID, scenarios[currentScenario].id);
-  }, [currentScenario, mounted]);
+  }, [currentScenario]);
 
   const saveLessons = useCallback((set: Set<number>) => {
     setCompletedLessons(set);
@@ -202,23 +196,16 @@ export function NumPyDojoApp({
       if (tab === 'lessons') {
         const fallback = lessonSlugAt(nextLessonIndex);
         const slug = loadString(KEY_LAST_LESSON_SLUG, fallback) || fallback;
-        router.push('/lessons/' + slug);
+        router.push('/lessons/' + slug, { scroll: false });
       } else if (tab === 'scenarios') {
         const fallback = scenarios[nextScenarioIndex].id;
         const id = loadString(KEY_LAST_SCENARIO_ID, fallback) || fallback;
-        router.push('/scenarios/' + id);
+        router.push('/scenarios/' + id, { scroll: false });
       } else {
-        router.push('/quizzes');
+        router.push('/quizzes', { scroll: false });
       }
     },
     [router, nextLessonIndex, nextScenarioIndex]
-  );
-
-  const goToLessonByIndex = useCallback(
-    (idx: number) => {
-      router.push('/lessons/' + lessonSlugAt(idx));
-    },
-    [router]
   );
 
   useEffect(() => {
@@ -269,8 +256,6 @@ export function NumPyDojoApp({
       })),
     []
   );
-
-  if (!mounted) return <div className="app app--dashboard" />;
 
   return (
     <>
@@ -328,7 +313,7 @@ export function NumPyDojoApp({
             lessons={lessons}
             currentIndex={currentLesson}
             completedSet={completedLessons}
-            onSelect={(i) => router.push('/lessons/' + lessonSlugAt(i))}
+            onSelect={(i) => router.push('/lessons/' + lessonSlugAt(i), { scroll: false })}
           />
         )}
         {dojoOpen && activeTab === 'scenarios' && (
@@ -336,7 +321,7 @@ export function NumPyDojoApp({
             scenarios={scenarios}
             currentIndex={currentScenario}
             completedScenarios={completedScenarios}
-            onSelect={(i) => router.push('/scenarios/' + scenarios[i].id)}
+            onSelect={(i) => router.push('/scenarios/' + scenarios[i].id, { scroll: false })}
           />
         )}
         {dojoOpen && activeTab === 'quizzes' && (
@@ -421,12 +406,11 @@ export function NumPyDojoApp({
                     saveScenarioCompletion(next);
                   }}
                   toast={toast}
-                  onGoToLesson={goToLessonByIndex}
                 />
               )}
 
               {activeTab === 'quizzes' && (
-                <QuizView onGoToLesson={goToLessonByIndex} toast={toast} />
+                <QuizView toast={toast} />
               )}
             </>
           )}

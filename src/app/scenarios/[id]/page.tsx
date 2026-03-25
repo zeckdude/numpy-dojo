@@ -14,7 +14,6 @@ export default function ScenarioPage({ params }: { params: { id: string } }) {
   const existingWhyIllustrationSrcs = getExistingWhyIllustrationSrcs();
   return (
     <NumPyDojoApp
-      key={params.id}
       route={{ kind: 'scenario', id: params.id }}
       existingWhyIllustrationSrcs={existingWhyIllustrationSrcs}
     />

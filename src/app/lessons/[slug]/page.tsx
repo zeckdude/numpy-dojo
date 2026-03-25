@@ -14,7 +14,6 @@ export default function LessonPage({ params }: { params: { slug: string } }) {
   const existingWhyIllustrationSrcs = getExistingWhyIllustrationSrcs();
   return (
     <NumPyDojoApp
-      key={params.slug}
       route={{ kind: 'lesson', slug: params.slug }}
       existingWhyIllustrationSrcs={existingWhyIllustrationSrcs}
     />

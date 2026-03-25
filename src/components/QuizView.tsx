@@ -1,12 +1,13 @@
 'use client';
 
+import Link from 'next/link';
 import { useState, useEffect, useCallback } from 'react';
 import { quizPool } from '../data/quizzes';
 import { QuizQuestion } from '../data/types';
+import { lessonSlugAt } from '../lib/routes';
 import { loadQuizHistory, saveQuizHistory, QuizHistoryEntry } from '../lib/storage';
 
 interface Props {
-  onGoToLesson: (idx: number) => void;
   toast: (msg: string) => void;
 }
 
@@ -30,7 +31,7 @@ function shuffleArray<T>(arr: T[]): T[] {
   return copy;
 }
 
-export function QuizView({ onGoToLesson, toast }: Props) {
+export function QuizView({ toast }: Props) {
   const [phase, setPhase] = useState<Phase>('setup');
   const [questionCount, setQuestionCount] = useState(15);
   const [questions, setQuestions] = useState<QuizQuestion[]>([]);
@@ -206,7 +207,6 @@ export function QuizView({ onGoToLesson, toast }: Props) {
                     entry={entry}
                     expanded={expandedHistory === entry.id}
                     onToggle={() => setExpandedHistory(expandedHistory === entry.id ? null : entry.id)}
-                    onGoToLesson={onGoToLesson}
                   />
                 ))}
               </div>
@@ -236,7 +236,6 @@ export function QuizView({ onGoToLesson, toast }: Props) {
                 entry={entry}
                 expanded={expandedHistory === entry.id}
                 onToggle={() => setExpandedHistory(expandedHistory === entry.id ? null : entry.id)}
-                onGoToLesson={onGoToLesson}
               />
             ))
           )}
@@ -272,9 +271,12 @@ export function QuizView({ onGoToLesson, toast }: Props) {
                   <>
                     <div style={{ fontSize: 11, color: 'var(--error)' }}>Your answer: {a.userAnswer || '(none)'}</div>
                     <div style={{ fontSize: 11, color: 'var(--success)' }}>Correct: {a.correctAnswer}</div>
-                    <a className="lesson-link" onClick={() => onGoToLesson(a.lessonRef.index)}>
+                    <Link
+                      href={`/lessons/${lessonSlugAt(a.lessonRef.index)}`}
+                      className="lesson-link"
+                    >
                       📘 Review: {a.lessonRef.title}
-                    </a>
+                    </Link>
                   </>
                 )}
               </div>
@@ -374,9 +376,12 @@ export function QuizView({ onGoToLesson, toast }: Props) {
               <div>{feedback.explanation}</div>
               {!feedback.correct && (
                 <div style={{ marginTop: 8 }}>
-                  <a className="lesson-link" onClick={() => onGoToLesson(currentQuestion.lessonRef.index)}>
+                  <Link
+                    href={`/lessons/${lessonSlugAt(currentQuestion.lessonRef.index)}`}
+                    className="lesson-link"
+                  >
                     📘 Review: {currentQuestion.lessonRef.title}
-                  </a>
+                  </Link>
                 </div>
               )}
               <button className="quiz-submit" onClick={nextQuestion} style={{ marginTop: 12 }}>
@@ -395,12 +400,10 @@ function QuizHistoryCard({
   entry,
   expanded,
   onToggle,
-  onGoToLesson,
 }: {
   entry: QuizHistoryEntry;
   expanded: boolean;
   onToggle: () => void;
-  onGoToLesson: (idx: number) => void;
 }) {
   const pct = Math.round((entry.correctCount / entry.totalQuestions) * 100);
   const scoreClass = pct >= 80 ? 'good' : pct >= 60 ? 'mid' : 'bad';
@@ -426,13 +429,14 @@ function QuizHistoryCard({
                     <span style={{ fontSize: 11, color: 'var(--error)' }}>Yours: {q.userAnswer || '(none)'}</span>
                     <span style={{ fontSize: 11, color: 'var(--success)', marginLeft: 12 }}>Correct: {q.correctAnswer}</span>
                     {q.lessonRef && (
-                      <a
+                      <Link
+                        href={`/lessons/${lessonSlugAt(q.lessonRef.index)}`}
                         className="lesson-link"
-                        onClick={(e) => { e.stopPropagation(); onGoToLesson(q.lessonRef!.index); }}
+                        onClick={(e) => e.stopPropagation()}
                         style={{ marginLeft: 12 }}
                       >
                         📘 {q.lessonRef.title}
-                      </a>
+                      </Link>
                     )}
                   </div>
                 )}

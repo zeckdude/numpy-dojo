@@ -1,7 +1,9 @@
 'use client';
 
+import Link from 'next/link';
 import { useState } from 'react';
 import { Scenario } from '../data/types';
+import { lessonSlugAt } from '../lib/routes';
 import { CodeEditor } from './CodeEditor';
 import { scenarioContextHtml } from '../lib/scenarioContext';
 
@@ -12,10 +14,9 @@ interface Props {
   completedScenarios: Set<string>;
   onCompleteScenario: (id: string) => void;
   toast: (msg: string) => void;
-  onGoToLesson: (idx: number) => void;
 }
 
-export function ScenarioView({ scenario, savedCode, onSaveCode, completedScenarios, onCompleteScenario, toast, onGoToLesson }: Props) {
+export function ScenarioView({ scenario, savedCode, onSaveCode, completedScenarios, onCompleteScenario, toast }: Props) {
   const [currentStep, setCurrentStep] = useState(0);
   const [completedSteps, setCompletedSteps] = useState<Set<number>>(new Set());
 
@@ -92,13 +93,9 @@ export function ScenarioView({ scenario, savedCode, onSaveCode, completedScenari
             <strong style={{ color: 'var(--text-mid)' }}>Related lessons:</strong>{' '}
             {scenario.lessonsUsed.map((idx, i) => (
               <span key={idx}>
-                <a
-                  className="lesson-link"
-                  onClick={() => onGoToLesson(idx)}
-                  style={{ cursor: 'pointer' }}
-                >
+                <Link href={`/lessons/${lessonSlugAt(idx)}`} className="lesson-link">
                   Lesson {idx + 1}
-                </a>
+                </Link>
                 {i < scenario.lessonsUsed.length - 1 ? ', ' : ''}
               </span>
             ))}
