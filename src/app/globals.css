@@ -337,6 +337,208 @@ main {
 .prose ul { padding-left: 18px; margin-bottom: 12px; }
 .prose li { margin-bottom: 5px; line-height: 1.65; }
 
+.prose-figure {
+  margin: 16px 0;
+  padding: 14px;
+  background: var(--bg-editor);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  text-align: center;
+}
+
+.prose-figure img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  margin: 0 auto;
+  border-radius: 6px;
+}
+
+.prose figcaption,
+.prose-figure figcaption {
+  margin-top: 12px;
+  font-size: 12px;
+  line-height: 1.55;
+  color: var(--text-lo);
+  text-align: left;
+}
+
+.lesson-details {
+  margin: 18px 0 0;
+  padding: 0;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--bg-deep);
+  overflow: hidden;
+}
+
+.lesson-details summary {
+  list-style: none;
+  cursor: pointer;
+  padding: 12px 16px;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--accent);
+  background: var(--accent-dim);
+  border-bottom: 1px solid transparent;
+  transition: background 0.12s;
+}
+
+.lesson-details summary::-webkit-details-marker {
+  display: none;
+}
+
+.lesson-details summary::after {
+  content: '▸';
+  float: right;
+  font-size: 10px;
+  opacity: 0.8;
+}
+
+.lesson-details[open] summary {
+  border-bottom-color: var(--border);
+}
+
+.lesson-details[open] summary::after {
+  content: '▾';
+}
+
+.lesson-details summary:hover {
+  filter: brightness(1.06);
+}
+
+.lesson-details summary:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: -2px;
+}
+
+.lesson-details-body {
+  padding: 16px 18px 18px;
+}
+
+/* Zoom affordance: not tied to JS-added classes (innerHTML refresh drops those). */
+.lesson-details-body img {
+  cursor: zoom-in;
+  transition: box-shadow 0.15s ease;
+}
+
+.lesson-details-body img:hover {
+  box-shadow: 0 0 0 2px var(--accent-glow);
+}
+
+.lesson-details-body img:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
+/* Why this matters — image lightbox */
+.why-matters-lightbox-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 120;
+  padding: 24px 16px;
+  background: rgba(0, 0, 0, 0.72);
+  place-items: center;
+  overflow-y: auto;
+}
+
+.why-matters-lightbox-overlay.show {
+  display: grid;
+}
+
+.why-matters-lightbox {
+  width: min(920px, 100%);
+  max-height: min(92vh, 900px);
+  display: flex;
+  flex-direction: column;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.55);
+  animation: popIn 0.2s ease;
+}
+
+.why-matters-lightbox-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+}
+
+.why-matters-lightbox-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text-hi);
+  margin: 0;
+}
+
+.why-matters-lightbox-close {
+  flex-shrink: 0;
+  background: var(--accent);
+  border: none;
+  color: var(--bg-deep);
+  padding: 8px 18px;
+  border-radius: 6px;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: filter 0.15s;
+}
+
+.why-matters-lightbox-close:hover {
+  filter: brightness(1.08);
+}
+
+.why-matters-lightbox-close:focus-visible {
+  outline: 2px solid var(--blue);
+  outline-offset: 2px;
+}
+
+.why-matters-lightbox-img-wrap {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px 20px;
+  background: var(--bg-deep);
+  border-bottom: 1px solid var(--border);
+  max-height: min(58vh, 520px);
+  overflow: auto;
+}
+
+.why-matters-lightbox-img {
+  display: block;
+  max-width: 100%;
+  max-height: min(52vh, 480px);
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  border-radius: 8px;
+}
+
+.why-matters-lightbox-copy {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  padding: 18px 20px 22px;
+  font-size: 13px;
+  line-height: 1.65;
+}
+
+.why-matters-lightbox-copy .lightbox-prose-figcaption {
+  margin: 14px 0 0;
+  font-size: 12px;
+  line-height: 1.55;
+  color: var(--text-lo);
+}
+
 .task {
   background: var(--accent-dim);
   border: 1px solid rgba(232, 132, 60, 0.2);
@@ -927,7 +1129,9 @@ textarea.editor::placeholder { color: var(--text-lo); }
   margin-bottom: 8px;
 }
 
-.scenario-intro p { font-size: 13px; line-height: 1.6; color: var(--text-mid); }
+.scenario-intro-body { font-size: 13px; line-height: 1.6; color: var(--text-mid); }
+.scenario-intro-body p { margin-bottom: 12px; }
+.scenario-intro-body p:last-child { margin-bottom: 0; }
 
 .step-indicator {
   display: flex;

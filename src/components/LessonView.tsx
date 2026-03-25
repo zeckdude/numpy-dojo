@@ -1,20 +1,34 @@
 'use client';
 
 import { Lesson } from '../data/types';
+import { WhyItMattersSection } from './WhyItMattersSection';
 
 interface Props {
   lesson: Lesson;
   index: number;
   isComplete: boolean;
   onResetLesson: () => void;
+  existingWhyIllustrationSrcs?: string[];
 }
 
-export function LessonView({ lesson, index, isComplete, onResetLesson }: Props) {
+export function LessonView({
+  lesson,
+  index,
+  isComplete,
+  onResetLesson,
+  existingWhyIllustrationSrcs,
+}: Props) {
   return (
     <div className="learn" key={index}>
       <div className="badge">{lesson.badge}</div>
       <h2>{lesson.title}</h2>
       <div className="prose" dangerouslySetInnerHTML={{ __html: lesson.instruction }} />
+      {lesson.whyItMatters ? (
+        <WhyItMattersSection
+          html={lesson.whyItMatters}
+          existingWhyIllustrationSrcs={existingWhyIllustrationSrcs}
+        />
+      ) : null}
       <div className="task">
         <div className="task-label">🎯 Your Task</div>
         <p dangerouslySetInnerHTML={{ __html: lesson.task }} />
@@ -23,8 +37,11 @@ export function LessonView({ lesson, index, isComplete, onResetLesson }: Props) 
         <button
           className="hint-btn"
           onClick={(e) => {
-            const box = (e.currentTarget.parentElement?.querySelector('.hint-box') as HTMLElement);
-            if (box) box.classList.toggle('show');
+            const row = e.currentTarget.parentElement;
+            const box = row?.nextElementSibling;
+            if (box instanceof HTMLElement && box.classList.contains('hint-box')) {
+              box.classList.toggle('show');
+            }
           }}
         >
           💡 Show Hint

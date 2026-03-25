@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { Scenario } from '../data/types';
 import { CodeEditor } from './CodeEditor';
+import { scenarioContextHtml } from '../lib/scenarioContext';
 
 interface Props {
   scenario: Scenario;
@@ -42,7 +43,10 @@ export function ScenarioView({ scenario, savedCode, onSaveCode, completedScenari
 
         <div className="scenario-intro">
           <h4>📋 Context</h4>
-          <p>{scenario.context}</p>
+          <div
+            className="prose scenario-intro-body"
+            dangerouslySetInnerHTML={{ __html: scenarioContextHtml(scenario.context) }}
+          />
         </div>
 
         {/* Step indicators */}
@@ -70,11 +74,14 @@ export function ScenarioView({ scenario, savedCode, onSaveCode, completedScenari
           <button
             className="hint-btn"
             onClick={(e) => {
-              const box = (e.currentTarget.parentElement?.querySelector('.hint-box') as HTMLElement);
-              if (box) box.classList.toggle('show');
+              const row = e.currentTarget.parentElement;
+              const box = row?.nextElementSibling;
+              if (box instanceof HTMLElement && box.classList.contains('hint-box')) {
+                box.classList.toggle('show');
+              }
             }}
           >
-            💡 Hint
+            💡 Show Hint
           </button>
         </div>
         <div className="hint-box">{step.hint}</div>

@@ -34,7 +34,14 @@ export type AppRoute =
   | { kind: 'scenario'; id: string }
   | { kind: 'quiz' };
 
-export function NumPyDojoApp({ route }: { route: AppRoute }) {
+export function NumPyDojoApp({
+  route,
+  existingWhyIllustrationSrcs,
+}: {
+  route: AppRoute;
+  /** `/illustrations/...` paths that exist on disk; figures for missing files are hidden. */
+  existingWhyIllustrationSrcs?: string[];
+}) {
   const router = useRouter();
   const dojoOpen = route.kind !== 'dashboard';
 
@@ -375,6 +382,7 @@ export function NumPyDojoApp({ route }: { route: AppRoute }) {
                     lesson={lessons[currentLesson]}
                     index={currentLesson}
                     isComplete={completedLessons.has(currentLesson)}
+                    existingWhyIllustrationSrcs={existingWhyIllustrationSrcs}
                     onResetLesson={() =>
                       setDialog({
                         title: `Reset "${lessons[currentLesson].title}"`,

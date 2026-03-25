@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 200" fill="none" aria-hidden="true">
+  <rect width="400" height="200" rx="10" fill="#0a0d13" stroke="#1c2433" stroke-width="1"/>
+  <text x="200" y="28" fill="#eaeff6" font-family="IBM Plex Sans, system-ui, sans-serif" font-size="13" font-weight="700" text-anchor="middle">Broadcasting: row matrix + 1D vector</text>
+  <text x="24" y="58" fill="#8d98ab" font-family="IBM Plex Sans, system-ui, sans-serif" font-size="11">prices (2, 3)</text>
+  <rect x="24" y="66" width="144" height="56" rx="4" fill="#141a24" stroke="#e8843c" stroke-width="1"/>
+  <text x="96" y="100" fill="#eaeff6" font-family="JetBrains Mono, monospace" font-size="10" text-anchor="middle">2 x 3 grid</text>
+  <text x="200" y="58" fill="#8d98ab" font-family="IBM Plex Sans, system-ui, sans-serif" font-size="11">tax_rate (3,)</text>
+  <rect x="200" y="74" width="168" height="28" rx="4" fill="#141a24" stroke="#5ea3f8" stroke-width="1"/>
+  <text x="284" y="94" fill="#eaeff6" font-family="JetBrains Mono, monospace" font-size="10" text-anchor="middle">3 values &#8594; virtual rows</text>
+  <path d="M 96 130 L 96 150 L 284 150 L 284 138" stroke="#8d98ab" stroke-width="1" fill="none" stroke-dasharray="4 3"/>
+  <text x="200" y="172" fill="#8d98ab" font-family="IBM Plex Sans, system-ui, sans-serif" font-size="11" text-anchor="middle">NumPy stretches the vector to match each row &#8212; no Python loop</text>
+</svg>

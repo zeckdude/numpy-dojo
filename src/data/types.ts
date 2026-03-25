@@ -5,6 +5,8 @@ export interface Lesson {
   title: string;
   badge: string;
   instruction: string;
+  /** Optional HTML: motivation, connections, figures—shown in a collapsed details panel by default. */
+  whyItMatters?: string;
   task: string;
   hint: string;
   starter: string;
@@ -15,7 +17,8 @@ export interface Scenario {
   id: string;
   title: string;
   section: string;
-  context: string; // the "real-world" setup narrative
+  /** HTML fragment (paragraphs, figures). Plain text scenarios are escaped when rendered. */
+  context: string;
   steps: ScenarioStep[];
   lessonsUsed: number[]; // indices into lessons array
 }

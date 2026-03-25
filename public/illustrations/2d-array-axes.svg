@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 220" fill="none" aria-hidden="true">
+  <rect width="360" height="220" rx="10" fill="#0a0d13" stroke="#1c2433" stroke-width="1"/>
+  <text x="180" y="28" fill="#eaeff6" font-family="IBM Plex Sans, system-ui, sans-serif" font-size="13" font-weight="700" text-anchor="middle">2D array: rows vs columns</text>
+  <g transform="translate(80, 52)">
+    <rect x="0" y="0" width="160" height="120" rx="4" fill="#141a24" stroke="#1c2433" stroke-width="1"/>
+    <line x1="40" y1="0" x2="40" y2="120" stroke="#3e4a5c" stroke-width="1"/>
+    <line x1="80" y1="0" x2="80" y2="120" stroke="#3e4a5c" stroke-width="1"/>
+    <line x1="120" y1="0" x2="120" y2="120" stroke="#3e4a5c" stroke-width="1"/>
+    <line x1="0" y1="40" x2="160" y2="40" stroke="#3e4a5c" stroke-width="1"/>
+    <line x1="0" y1="80" x2="160" y2="80" stroke="#3e4a5c" stroke-width="1"/>
+    <rect x="0" y="0" width="160" height="40" fill="rgba(232,132,60,0.12)" stroke="#e8843c" stroke-width="1.5"/>
+    <text x="80" y="26" fill="#e8843c" font-family="IBM Plex Sans, system-ui, sans-serif" font-size="11" font-weight="600" text-anchor="middle">axis=1 (across columns)</text>
+    <rect x="0" y="0" width="40" height="120" fill="rgba(94,163,248,0.1)" stroke="#5ea3f8" stroke-width="1.5"/>
+    <text x="20" y="68" fill="#5ea3f8" font-family="IBM Plex Sans, system-ui, sans-serif" font-size="9" font-weight="600" text-anchor="middle" transform="rotate(-90 20 68)">axis=0</text>
+  </g>
+  <text x="180" y="198" fill="#8d98ab" font-family="IBM Plex Sans, system-ui, sans-serif" font-size="11" text-anchor="middle"><tspan font-weight="600" fill="#5ea3f8">axis=0</tspan> walks down rows &#183; <tspan font-weight="600" fill="#e8843c">axis=1</tspan> walks across columns</text>
+</svg>
