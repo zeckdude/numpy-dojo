@@ -293,8 +293,6 @@ a.path-step-btn {
 .header-more-reset {
   align-self: stretch;
   width: 100%;
-  padding: 10px 12px;
-  font-size: 12px;
 }
 
 .meter {
@@ -327,16 +325,26 @@ a.path-step-btn {
   transition: width 0.5s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-.hdr-btn {
+/* Ghost text control — same shell as .dashboard-share-trigger--compact (Share) */
+.hdr-btn,
+.dashboard-share-trigger--compact {
   background: none;
   border: 1px solid var(--border);
   color: var(--text-lo);
   font-size: 11px;
-  padding: 4px 12px;
-  border-radius: 4px;
+  font-weight: 600;
+  line-height: 1;
+  height: 28px;
+  min-height: 28px;
+  padding: 0 12px;
+  box-sizing: border-box;
+  border-radius: 5px;
   cursor: pointer;
   font-family: inherit;
   transition: 0.15s;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .hdr-btn:hover { border-color: var(--error); color: var(--error); }
@@ -2255,18 +2263,6 @@ textarea.editor::placeholder { color: var(--text-lo); }
 .dashboard-share-menu {
   position: relative;
   display: inline-block;
-}
-
-/* Compact trigger (header, lesson band, scenarios, quizzes) — matches .hdr-btn */
-.dashboard-share-trigger--compact {
-  background: none;
-  border: 1px solid var(--border);
-  color: var(--text-lo);
-  padding: 4px 12px;
-  border-radius: 4px;
-  font-size: 11px;
-  font-weight: 600;
-  cursor: pointer;
 }
 
 .dashboard-share-trigger--compact:hover {
