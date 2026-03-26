@@ -37,15 +37,27 @@ export function getPosthogHost(): string {
   return process.env.NEXT_PUBLIC_POSTHOG_HOST || 'https://us.i.posthog.com';
 }
 
+/** When events go through your own domain (reverse proxy), PostHog’s UI still lives on their origin. */
+function getPosthogUiHost(): string | undefined {
+  const explicit = process.env.NEXT_PUBLIC_POSTHOG_UI_HOST?.trim();
+  if (explicit) return explicit;
+  const api = getPosthogHost();
+  if (api.includes('posthog.com')) return undefined;
+  return 'https://us.posthog.com';
+}
+
 export function initPosthog(): void {
   if (typeof window === 'undefined' || inited) return;
   const token = getPosthogToken();
   if (!token) return;
 
   const appEnvironment = getPosthogAppEnvironment();
+  const apiHost = getPosthogHost();
+  const uiHost = getPosthogUiHost();
 
   posthog.init(token, {
-    api_host: getPosthogHost(),
+    api_host: apiHost,
+    ...(uiHost ? { ui_host: uiHost } : {}),
     // Recommended for Next.js (script injection / SPA defaults); see PostHog Next.js docs.
     defaults: '2026-01-30',
     capture_pageview: false,
