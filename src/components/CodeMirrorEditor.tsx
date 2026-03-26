@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useCallback } from 'react';
 import { EditorView, keymap, placeholder as cmPlaceholder } from '@codemirror/view';
-import { EditorState } from '@codemirror/state';
+import { EditorState, Prec } from '@codemirror/state';
 import { python } from '@codemirror/lang-python';
 import { defaultKeymap, indentWithTab } from '@codemirror/commands';
 import { syntaxHighlighting, HighlightStyle } from '@codemirror/language';
@@ -134,13 +134,13 @@ export function CodeMirrorEditor({ value, onChange, onRun, placeholder }: Props)
 
     const dark = isDark();
 
-    const runKeyBinding = keymap.of([{
+    const runKeyBinding = Prec.highest(keymap.of([{
       key: 'Mod-Enter',
       run: () => {
         onRunRef.current?.();
         return true;
       },
-    }]);
+    }]));
 
     const updateListener = EditorView.updateListener.of((update) => {
       if (update.docChanged) {
@@ -149,12 +149,12 @@ export function CodeMirrorEditor({ value, onChange, onRun, placeholder }: Props)
     });
 
     const extensions = [
+      runKeyBinding,
       baseTheme,
       dark ? darkTheme : lightTheme,
       syntaxHighlighting(dark ? darkHighlight : lightHighlight),
       python(),
       keymap.of([indentWithTab, ...defaultKeymap]),
-      runKeyBinding,
       updateListener,
       EditorView.lineWrapping,
       EditorState.tabSize.of(4),
@@ -204,18 +204,18 @@ export function CodeMirrorEditor({ value, onChange, onRun, placeholder }: Props)
       const doc = view.state.doc.toString();
 
       const extensions = [
-        baseTheme,
-        dark ? darkTheme : lightTheme,
-        syntaxHighlighting(dark ? darkHighlight : lightHighlight),
-        python(),
-        keymap.of([indentWithTab, ...defaultKeymap]),
-        keymap.of([{
+        Prec.highest(keymap.of([{
           key: 'Mod-Enter',
           run: () => {
             onRunRef.current?.();
             return true;
           },
-        }]),
+        }])),
+        baseTheme,
+        dark ? darkTheme : lightTheme,
+        syntaxHighlighting(dark ? darkHighlight : lightHighlight),
+        python(),
+        keymap.of([indentWithTab, ...defaultKeymap]),
         EditorView.updateListener.of((update) => {
           if (update.docChanged) {
             onChangeRef.current(update.state.doc.toString());
