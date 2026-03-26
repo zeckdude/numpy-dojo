@@ -7,6 +7,7 @@ import { docLinkLogoProps } from '../lib/docLinkSources';
 import { WhyItMattersSection } from './WhyItMattersSection';
 import { ShareSiteMenu } from './ShareSiteMenu';
 import { HighlightedProse } from './HighlightedProse';
+import { LearnFontControl } from './LearnFontControl';
 
 interface Props {
   lesson: Lesson;
@@ -46,12 +47,15 @@ export function LessonView({
               >
                 {lesson.badge} <span className="badge-caret" aria-hidden>▾</span>
               </button>
-              <ShareSiteMenu
-                title={`${lesson.title} · NumPy Dojo`}
-                text={`Practice "${lesson.title}" on NumPy Dojo—free lesson with a live NumPy editor.`}
-                ariaLabel={`Share this lesson: ${lesson.title}`}
-                variant="compact"
-              />
+              <div className="learn-pill-right">
+                <LearnFontControl />
+                <ShareSiteMenu
+                  title={`${lesson.title} · NumPy Dojo`}
+                  text={`Practice "${lesson.title}" on NumPy Dojo—free lesson with a live NumPy editor.`}
+                  ariaLabel={`Share this lesson: ${lesson.title}`}
+                  variant="compact"
+                />
+              </div>
             </div>
             <h2>{lesson.title}</h2>
             <HighlightedProse html={lesson.instruction} className="prose" />

@@ -10,6 +10,7 @@ import { WhyItMattersSection } from './WhyItMattersSection';
 import { ShareSiteMenu } from './ShareSiteMenu';
 import { SplitPanes } from './SplitPanes';
 import { scenarioContextHtml } from '../lib/scenarioContext';
+import { LearnFontControl } from './LearnFontControl';
 
 interface Props {
   scenario: Scenario;
@@ -58,12 +59,15 @@ export function ScenarioView({ scenario, savedCode, onSaveCode, onOpenNav, compl
           >
             Scenario <span className="badge-caret" aria-hidden>▾</span>
           </button>
-          <ShareSiteMenu
-            title={`${scenario.title} · NumPy Dojo`}
-            text={`Try the scenario "${scenario.title}" on NumPy Dojo—short multi-step NumPy exercises.`}
-            ariaLabel={`Share this scenario: ${scenario.title}`}
-            variant="compact"
-          />
+          <div className="learn-pill-right">
+            <LearnFontControl />
+            <ShareSiteMenu
+              title={`${scenario.title} · NumPy Dojo`}
+              text={`Try the scenario "${scenario.title}" on NumPy Dojo—short multi-step NumPy exercises.`}
+              ariaLabel={`Share this scenario: ${scenario.title}`}
+              variant="compact"
+            />
+          </div>
         </div>
         <h2>{scenario.title}</h2>
 
@@ -90,7 +94,7 @@ export function ScenarioView({ scenario, savedCode, onSaveCode, onOpenNav, compl
           ))}
         </div>
 
-        <h3 style={{ fontSize: 16, marginBottom: 12 }}>{step.title}</h3>
+        <h3 className="scenario-step-title">{step.title}</h3>
 
         <div className="task">
           <div className="task-label">🎯 Task</div>
@@ -117,8 +121,8 @@ export function ScenarioView({ scenario, savedCode, onSaveCode, onOpenNav, compl
 
         {/* Related lessons */}
         {scenario.lessonsUsed.length > 0 && (
-          <div style={{ marginTop: 20, fontSize: 12, color: 'var(--text-lo)' }}>
-            <strong style={{ color: 'var(--text-mid)' }}>Related lessons:</strong>{' '}
+          <div className="scenario-related-lessons">
+            <strong className="scenario-related-label">Related lessons:</strong>{' '}
             {scenario.lessonsUsed.map((idx, i) => (
               <span key={idx}>
                 <Link href={`/lessons/${lessonSlugAt(idx)}`} className="lesson-link">

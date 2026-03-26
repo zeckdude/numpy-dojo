@@ -10,6 +10,7 @@ import {
   useState,
 } from 'react';
 import { filterWhyItMattersFiguresByExistingSrcs } from '../lib/filterWhyItMattersFigures';
+import { LearnFontControl } from './LearnFontControl';
 
 function proseWithoutFigures(html: string): string {
   if (typeof window === 'undefined') {
@@ -180,14 +181,17 @@ export function WhyItMattersSection({
               <h3 id={titleId} className="why-matters-lightbox-title">
                 {lightboxTitle}
               </h3>
-              <button
-                ref={closeBtnRef}
-                type="button"
-                className="why-matters-lightbox-close"
-                onClick={close}
-              >
-                Close
-              </button>
+              <div className="why-matters-lightbox-actions">
+                <LearnFontControl />
+                <button
+                  ref={closeBtnRef}
+                  type="button"
+                  className="why-matters-lightbox-close"
+                  onClick={close}
+                >
+                  Close
+                </button>
+              </div>
             </div>
             <div className="why-matters-lightbox-img-wrap">
               <img
