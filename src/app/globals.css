@@ -702,26 +702,25 @@ main {
 .learn-font-control {
   position: relative;
 }
-.learn-font-btn {
-  display: flex;
-  align-items: center;
-  justify-content: center;
+.font-size-btn {
+  display: grid;
+  place-items: center;
   width: 28px;
   height: 28px;
+  background: none;
   border: 1px solid var(--border);
   border-radius: 6px;
-  background: transparent;
-  color: var(--text-mid);
-  font-family: 'Georgia', serif;
-  font-size: 13px;
-  font-weight: 700;
+  color: var(--text-lo);
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-size: 14px;
+  font-weight: 800;
+  line-height: 1;
   cursor: pointer;
   transition: border-color 0.15s, color 0.15s;
-  line-height: 1;
 }
-.learn-font-btn:hover {
-  border-color: var(--accent);
-  color: var(--accent);
+.font-size-btn:hover {
+  border-color: var(--text-mid);
+  color: var(--text-mid);
 }
 .learn-font-popover {
   position: absolute;
@@ -771,6 +770,26 @@ main {
   min-width: 36px;
   text-align: center;
   font-variant-numeric: tabular-nums;
+}
+
+/* Editor font size control (code bar) */
+.editor-font-control {
+  position: relative;
+}
+.editor-font-popover {
+  position: absolute;
+  top: calc(100% + 6px);
+  right: 0;
+  z-index: 60;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 5px 8px;
+  box-shadow: var(--shadow-overlay);
+  white-space: nowrap;
 }
 
 .learn-pill-row .dashboard-share-panel {
@@ -1587,7 +1606,7 @@ textarea.editor::placeholder { color: var(--text-lo); }
   gap: 10px;
   padding: 12px;
   font-weight: 600;
-  font-size: 13px;
+  font-size: var(--editor-fs);
   animation: slideIn 0.25s ease;
 }
 
@@ -1662,7 +1681,7 @@ textarea.editor::placeholder { color: var(--text-lo); }
 .output-text {
   padding: 14px 18px;
   font-family: 'JetBrains Mono', monospace;
-  font-size: 13px;
+  font-size: var(--editor-fs);
   line-height: 1.6;
   white-space: pre-wrap;
   color: var(--text-mid);

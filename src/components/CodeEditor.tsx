@@ -5,6 +5,7 @@ import { useState, useRef, useEffect, useCallback, type KeyboardEvent } from 're
 import { executeCode } from '../lib/executor';
 import { captureClientError, track } from '../lib/analytics';
 import { CodeMirrorEditor } from './CodeMirrorEditor';
+import { EditorFontControl } from './EditorFontControl';
 
 const OUTPUT_SPLIT_STORAGE_KEY = 'np_dojo_editor_output_pct';
 const OUTPUT_SPLIT_DEFAULT = 58;
@@ -150,14 +151,6 @@ export function CodeEditor({ codeKey, savedCode, validate, onSaveCode, onPass, o
     document.body.removeChild(ta);
   }
 
-  const changeFontSize = useCallback((delta: number) => {
-    const root = document.documentElement;
-    const cur = parseFloat(getComputedStyle(root).getPropertyValue('--editor-fs'));
-    const next = Math.max(10, Math.min(22, cur + delta));
-    root.style.setProperty('--editor-fs', next + 'px');
-    try { localStorage.setItem('np_dojo_fs', String(next)); } catch { /* */ }
-  }, []);
-
   const applyOutputSplitPct = useCallback((raw: number) => {
     const c = clampSplit(raw, OUTPUT_SPLIT_MIN, OUTPUT_SPLIT_MAX);
     setEditorPct(c);
@@ -250,8 +243,7 @@ export function CodeEditor({ codeKey, savedCode, validate, onSaveCode, onPass, o
               ↕️
             </button>
           ) : null}
-          <button className="icon-btn" onClick={() => changeFontSize(-1)} title="Smaller font">➖</button>
-          <button className="icon-btn" onClick={() => changeFontSize(1)} title="Larger font">➕</button>
+          <EditorFontControl />
           <button className="run" onClick={runCode}>
             <svg viewBox="0 0 24 24" fill="currentColor" width="12" height="12">
               <polygon points="5,3 19,12 5,21" />

@@ -2,12 +2,12 @@
 
 import { useCallback, useEffect, useRef, useState } from 'react';
 
-const STORAGE_KEY = 'np_dojo_learn_fs';
-const DEFAULT_FS = 14;
-const MIN_FS = 12;
-const MAX_FS = 20;
+const STORAGE_KEY = 'np_dojo_fs';
+const DEFAULT_FS = 13.5;
+const MIN_FS = 10;
+const MAX_FS = 22;
 
-function loadLearnFs(): number {
+function loadEditorFs(): number {
   try {
     const v = parseFloat(localStorage.getItem(STORAGE_KEY) ?? '');
     if (Number.isFinite(v) && v >= MIN_FS && v <= MAX_FS) return v;
@@ -15,19 +15,19 @@ function loadLearnFs(): number {
   return DEFAULT_FS;
 }
 
-function applyLearnFs(px: number) {
-  document.documentElement.style.setProperty('--learn-fs', `${px}px`);
+function applyEditorFs(px: number) {
+  document.documentElement.style.setProperty('--editor-fs', `${px}px`);
 }
 
-export function LearnFontControl() {
+export function EditorFontControl() {
   const [fs, setFs] = useState(DEFAULT_FS);
   const [open, setOpen] = useState(false);
   const wrapRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const saved = loadLearnFs();
+    const saved = loadEditorFs();
     setFs(saved);
-    applyLearnFs(saved);
+    applyEditorFs(saved);
   }, []);
 
   useEffect(() => {
@@ -44,7 +44,7 @@ export function LearnFontControl() {
   const change = useCallback((delta: number) => {
     setFs((prev) => {
       const next = Math.max(MIN_FS, Math.min(MAX_FS, prev + delta));
-      applyLearnFs(next);
+      applyEditorFs(next);
       try { localStorage.setItem(STORAGE_KEY, String(next)); } catch { /* */ }
       return next;
     });
@@ -53,24 +53,24 @@ export function LearnFontControl() {
   const pct = Math.round((fs / DEFAULT_FS) * 100);
 
   return (
-    <div className="learn-font-control" ref={wrapRef}>
+    <div className="editor-font-control" ref={wrapRef}>
       <button
         type="button"
         className="font-size-btn"
         onClick={() => setOpen((o) => !o)}
-        title="Content font size"
+        title="Editor font size"
         aria-expanded={open}
       >
         Aa
       </button>
       {open && (
-        <div className="learn-font-popover">
+        <div className="editor-font-popover">
           <button
             type="button"
             className="learn-font-step"
             onClick={() => change(-1)}
             disabled={fs <= MIN_FS}
-            aria-label="Decrease font size"
+            aria-label="Decrease editor font size"
           >
             −
           </button>
@@ -80,7 +80,7 @@ export function LearnFontControl() {
             className="learn-font-step"
             onClick={() => change(1)}
             disabled={fs >= MAX_FS}
-            aria-label="Increase font size"
+            aria-label="Increase editor font size"
           >
             +
           </button>
