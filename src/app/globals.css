@@ -1595,12 +1595,14 @@ textarea.editor::placeholder { color: var(--text-lo); }
 
 .kb-hint {
   position: absolute;
-  bottom: 8px;
-  right: 16px;
-  font-size: 10px;
-  color: var(--text-lo);
+  bottom: 10px;
+  right: 14px;
+  font-size: 13px;
+  color: var(--text-mid);
   font-family: 'JetBrains Mono', monospace;
   pointer-events: none;
+  letter-spacing: 0.03em;
+  opacity: 0.65;
 }
 
 @media (max-width: 768px) {
