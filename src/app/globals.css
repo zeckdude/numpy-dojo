@@ -1842,6 +1842,11 @@ textarea.editor::placeholder { color: var(--text-lo); }
 
 .quiz-setup p { color: var(--text-mid); margin-bottom: 24px; font-size: 14px; }
 
+.quiz-setup-history {
+  margin-top: 36px;
+  text-align: left;
+}
+
 .quiz-option-group {
   display: flex;
   gap: 10px;
@@ -2001,6 +2006,8 @@ textarea.editor::placeholder { color: var(--text-lo); }
   justify-content: space-between;
   align-items: center;
   margin-bottom: 8px;
+  flex-wrap: wrap;
+  gap: 8px;
 }
 
 .quiz-score {
@@ -2035,6 +2042,78 @@ textarea.editor::placeholder { color: var(--text-lo); }
 .quiz-history-row:last-child { border-bottom: none; }
 .quiz-history-row .indicator { flex-shrink: 0; font-size: 14px; }
 
+.quiz-history-card--expanded {
+  border-color: var(--accent);
+}
+
+.quiz-history-qtext {
+  font-size: 13px;
+  line-height: 1.55;
+  color: var(--text-hi);
+}
+
+.quiz-history-answers {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid var(--border);
+}
+
+.quiz-history-line {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+}
+
+.quiz-history-line-label {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-lo);
+}
+
+.quiz-history-line-value {
+  font-size: 13px;
+  line-height: 1.45;
+  word-break: break-word;
+}
+
+.quiz-history-line--yours .quiz-history-line-value {
+  color: var(--error);
+}
+
+.quiz-history-line--correct .quiz-history-line-value {
+  color: var(--success);
+}
+
+.quiz-history-lesson-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 2px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.quiz-results-review {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.quiz-history-row--standalone {
+  margin-bottom: 0;
+  border-bottom: none;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--bg-card);
+  padding: 16px 18px;
+}
+
 .lesson-link {
   color: var(--accent);
   text-decoration: underline;
@@ -2043,6 +2122,11 @@ textarea.editor::placeholder { color: var(--text-lo); }
 }
 
 .lesson-link:hover { color: var(--warn); }
+
+.lesson-link.quiz-history-lesson-link {
+  font-size: 12px;
+  font-weight: 500;
+}
 
 /* ━━━ SCENARIO STYLES ━━━ */
 .scenario-intro {
@@ -2743,6 +2827,12 @@ a.module-card.module-card--link:focus-visible {
     transition: transform 0.25s ease;
   }
   nav.mobile-open { transform: translateX(0); }
+
+  /* Quizzes: placeholder sits in the grid column; unlike <nav> it is not fixed, so it steals the 1fr row and leaves a blank band above <main>. */
+  .sidebar-placeholder {
+    display: none !important;
+  }
+
   /* Scroll the dojo column: full lesson/scenario stacks above the code, then code below */
   main {
     min-height: 0;
@@ -2960,6 +3050,47 @@ a.module-card.module-card--link:focus-visible {
   @keyframes fade-in-backdrop {
     from { opacity: 0; }
     to { opacity: 1; }
+  }
+
+  /* Quizzes: align horizontal inset with .learn mobile (16px); relieve tight history rows */
+  .quiz-container {
+    padding: 20px 16px 40px;
+  }
+
+  .quiz-setup {
+    padding: 20px 0 32px;
+  }
+
+  .quiz-setup-history {
+    margin-top: 28px;
+  }
+
+  .quiz-history-card {
+    padding: 18px 16px;
+    margin-bottom: 14px;
+  }
+
+  .quiz-history-header {
+    gap: 10px;
+    row-gap: 6px;
+  }
+
+  .quiz-history-detail {
+    margin-top: 14px;
+    border-radius: 10px;
+  }
+
+  .quiz-history-row {
+    padding: 16px 14px;
+    gap: 12px;
+  }
+
+  .quiz-history-row--standalone {
+    padding: 16px 14px;
+  }
+
+  .quiz-score {
+    font-size: 18px;
   }
 }
 

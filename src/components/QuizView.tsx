@@ -204,8 +204,8 @@ export function QuizView({ toast }: Props) {
             </div>
 
             {history.length > 0 && (
-              <div style={{ marginTop: 40, textAlign: 'left' }}>
-                <h3 style={{ fontSize: 16, marginBottom: 16, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <div className="quiz-setup-history">
+                <h3 style={{ fontSize: 16, marginBottom: 16, display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 12 }}>
                   📊 Quiz History
                   <button className="sm-btn" onClick={() => setPhase('history')} style={{ marginTop: 0 }}>
                     View All →
@@ -272,26 +272,34 @@ export function QuizView({ toast }: Props) {
           </div>
 
           <h3 style={{ fontSize: 16, marginBottom: 16 }}>Review</h3>
-          {answers.map((a, i) => (
-            <div key={i} className="quiz-history-row" style={{ padding: '12px 16px', marginBottom: 8, background: 'var(--bg-card)', borderRadius: 8, border: '1px solid var(--border)' }}>
-              <span className="indicator">{a.correct ? '✅' : '❌'}</span>
-              <div style={{ flex: 1 }}>
-                <div style={{ marginBottom: 4 }}>{a.question}</div>
-                {!a.correct && (
-                  <>
-                    <div style={{ fontSize: 11, color: 'var(--error)' }}>Your answer: {a.userAnswer || '(none)'}</div>
-                    <div style={{ fontSize: 11, color: 'var(--success)' }}>Correct: {a.correctAnswer}</div>
-                    <Link
-                      href={`/lessons/${lessonSlugAt(a.lessonRef.index)}`}
-                      className="lesson-link"
-                    >
-                      📘 Review: {a.lessonRef.title}
-                    </Link>
-                  </>
-                )}
+          <div className="quiz-results-review">
+            {answers.map((a, i) => (
+              <div key={i} className="quiz-history-row quiz-history-row--standalone">
+                <span className="indicator">{a.correct ? '✅' : '❌'}</span>
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <div className="quiz-history-qtext">{a.question}</div>
+                  {!a.correct && (
+                    <div className="quiz-history-answers">
+                      <div className="quiz-history-line quiz-history-line--yours">
+                        <span className="quiz-history-line-label">Your answer</span>
+                        <span className="quiz-history-line-value">{a.userAnswer || '(none)'}</span>
+                      </div>
+                      <div className="quiz-history-line quiz-history-line--correct">
+                        <span className="quiz-history-line-label">Correct</span>
+                        <span className="quiz-history-line-value">{a.correctAnswer}</span>
+                      </div>
+                      <Link
+                        href={`/lessons/${lessonSlugAt(a.lessonRef.index)}`}
+                        className="lesson-link quiz-history-lesson-link"
+                      >
+                        📘 Review: {a.lessonRef.title}
+                      </Link>
+                    </div>
+                  )}
+                </div>
               </div>
-            </div>
-          ))}
+            ))}
+          </div>
 
           <div
             style={{
@@ -435,7 +443,10 @@ function QuizHistoryCard({
   const scoreClass = pct >= 80 ? 'good' : pct >= 60 ? 'mid' : 'bad';
 
   return (
-    <div className="quiz-history-card" onClick={onToggle}>
+    <div
+      className={`quiz-history-card${expanded ? ' quiz-history-card--expanded' : ''}`}
+      onClick={onToggle}
+    >
       <div className="quiz-history-header">
         <div className={`quiz-score ${scoreClass}`}>
           {entry.correctCount}/{entry.totalQuestions} ({pct}%)
@@ -448,18 +459,23 @@ function QuizHistoryCard({
           {entry.questions.map((q, i) => (
             <div key={i} className="quiz-history-row">
               <span className="indicator">{q.correct ? '✅' : '❌'}</span>
-              <div style={{ flex: 1 }}>
-                <div style={{ fontSize: 12 }}>{q.question}</div>
+              <div style={{ flex: 1, minWidth: 0 }}>
+                <div className="quiz-history-qtext">{q.question}</div>
                 {!q.correct && (
-                  <div style={{ marginTop: 4 }}>
-                    <span style={{ fontSize: 11, color: 'var(--error)' }}>Yours: {q.userAnswer || '(none)'}</span>
-                    <span style={{ fontSize: 11, color: 'var(--success)', marginLeft: 12 }}>Correct: {q.correctAnswer}</span>
+                  <div className="quiz-history-answers">
+                    <div className="quiz-history-line quiz-history-line--yours">
+                      <span className="quiz-history-line-label">Your answer</span>
+                      <span className="quiz-history-line-value">{q.userAnswer || '(none)'}</span>
+                    </div>
+                    <div className="quiz-history-line quiz-history-line--correct">
+                      <span className="quiz-history-line-label">Correct</span>
+                      <span className="quiz-history-line-value">{q.correctAnswer}</span>
+                    </div>
                     {q.lessonRef && (
                       <Link
                         href={`/lessons/${lessonSlugAt(q.lessonRef.index)}`}
-                        className="lesson-link"
+                        className="lesson-link quiz-history-lesson-link"
                         onClick={(e) => e.stopPropagation()}
-                        style={{ marginLeft: 12 }}
                       >
                         📘 {q.lessonRef.title}
                       </Link>
