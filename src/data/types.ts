@@ -9,7 +9,6 @@ export interface LessonDocLink {
 export interface Lesson {
   section: string;
   title: string;
-  badge: string;
   instruction: string;
   /** Optional HTML: motivation, connections, figures—shown in a collapsed details panel by default. */
   whyItMatters?: string;

@@ -45,7 +45,7 @@ export function LessonView({
                 className="badge badge--nav-trigger"
                 onClick={onOpenNav}
               >
-                {lesson.badge} <span className="badge-caret" aria-hidden>▾</span>
+                Lesson <span className="badge-caret" aria-hidden>▾</span>
               </button>
               <div className="learn-pill-right">
                 <LearnFontControl />
