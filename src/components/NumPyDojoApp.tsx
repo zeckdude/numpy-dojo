@@ -18,6 +18,7 @@ import { ThemeSwitch } from './ThemeSwitch';
 import { SplitPanes } from './SplitPanes';
 import { ShareSiteMenu } from './ShareSiteMenu';
 import { ConfirmDialog } from './ConfirmDialog';
+import { MobileBreadcrumb } from './MobileBreadcrumb';
 import {
   loadSet,
   saveSet,
@@ -531,6 +532,46 @@ export function NumPyDojoApp({
                   </button>
                 ))}
               </div>
+
+              {activeTab === 'lessons' && (
+                <MobileBreadcrumb
+                  currentIndex={currentLesson}
+                  totalCount={lessons.length}
+                  title={lessons[currentLesson].title}
+                  label="Lesson"
+                  onPrev={
+                    currentLesson > 0
+                      ? () => router.push('/lessons/' + lessonSlugAt(currentLesson - 1), { scroll: false })
+                      : undefined
+                  }
+                  onNext={
+                    currentLesson < lessons.length - 1
+                      ? () => router.push('/lessons/' + lessonSlugAt(currentLesson + 1), { scroll: false })
+                      : undefined
+                  }
+                  onOpenNav={openMobileNav}
+                />
+              )}
+
+              {activeTab === 'scenarios' && (
+                <MobileBreadcrumb
+                  currentIndex={currentScenario}
+                  totalCount={scenarios.length}
+                  title={scenarios[currentScenario].title}
+                  label="Scenario"
+                  onPrev={
+                    currentScenario > 0
+                      ? () => router.push('/scenarios/' + scenarios[currentScenario - 1].id, { scroll: false })
+                      : undefined
+                  }
+                  onNext={
+                    currentScenario < scenarios.length - 1
+                      ? () => router.push('/scenarios/' + scenarios[currentScenario + 1].id, { scroll: false })
+                      : undefined
+                  }
+                  onOpenNav={openMobileNav}
+                />
+              )}
 
               {activeTab === 'lessons' && (
                 <SplitPanes
