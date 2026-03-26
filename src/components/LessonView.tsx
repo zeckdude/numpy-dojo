@@ -140,7 +140,7 @@ export function LessonView({
           </button>
           {isComplete && (
             <button className="sm-btn danger" onClick={onResetLesson}>
-              ↺ Reset Lesson
+              🔄 Reset Lesson
             </button>
           )}
         </div>
