@@ -42,9 +42,7 @@ export function CodeEditor({ codeKey, savedCode, validate, onSaveCode, onPass, o
   const [outputOpen, setOutputOpen] = useState(true);
   const [isMobile, setIsMobile] = useState(false);
   const [mobileEditorExpanded, setMobileEditorExpanded] = useState(false);
-  const [editorPct, setEditorPct] = useState(() =>
-    typeof window !== 'undefined' ? readOutputSplitPct() : OUTPUT_SPLIT_DEFAULT
-  );
+  const [editorPct, setEditorPct] = useState(OUTPUT_SPLIT_DEFAULT);
   const [outputSplitDragging, setOutputSplitDragging] = useState(false);
   const editorRef = useRef<HTMLTextAreaElement>(null);
   const codePaneRef = useRef<HTMLDivElement>(null);
@@ -69,6 +67,10 @@ export function CodeEditor({ codeKey, savedCode, validate, onSaveCode, onPass, o
   useEffect(() => {
     setMobileEditorExpanded(false);
   }, [codeKey]);
+
+  useEffect(() => {
+    setEditorPct(readOutputSplitPct());
+  }, []);
 
   useEffect(() => {
     const mq = window.matchMedia('(max-width: 768px)');
@@ -182,7 +184,7 @@ export function CodeEditor({ codeKey, savedCode, validate, onSaveCode, onPass, o
   }, []);
 
   useEffect(() => {
-    if (!outputSplitDragging) return;
+    if (!outputSplitDragging || isMobile) return;
 
     const applyFromClientY = (clientY: number) => {
       const el = outputSplitRef.current;
@@ -217,9 +219,10 @@ export function CodeEditor({ codeKey, savedCode, validate, onSaveCode, onPass, o
       document.body.style.cursor = '';
       document.body.style.userSelect = '';
     };
-  }, [outputSplitDragging, applyOutputSplitPct]);
+  }, [outputSplitDragging, applyOutputSplitPct, isMobile]);
 
   const onOutputGutterKeyDown = (e: KeyboardEvent) => {
+    if (isMobile) return;
     const p = editorPctRef.current;
     if (e.key === 'ArrowUp') {
       e.preventDefault();
@@ -277,7 +280,9 @@ export function CodeEditor({ codeKey, savedCode, validate, onSaveCode, onPass, o
         ref={outputSplitRef}
         className={`code-editor-split${outputSplitDragging ? ' code-editor-split--dragging' : ''}`}
         style={{
-          gridTemplateRows: `minmax(0, ${editorPct}fr) 6px minmax(0, ${100 - editorPct}fr)`,
+          gridTemplateRows: isMobile
+            ? 'minmax(0, 1fr) auto'
+            : `minmax(0, ${editorPct}fr) 6px minmax(0, ${100 - editorPct}fr)`,
         }}
       >
         <div className="code-split-top">
@@ -306,22 +311,24 @@ export function CodeEditor({ codeKey, savedCode, validate, onSaveCode, onPass, o
           )}
         </div>
 
-        <div
-          className="output-split-gutter"
-          role="separator"
-          aria-orientation="horizontal"
-          aria-label="Resize editor and output height"
-          aria-valuenow={Math.round(editorPct)}
-          aria-valuemin={OUTPUT_SPLIT_MIN}
-          aria-valuemax={OUTPUT_SPLIT_MAX}
-          tabIndex={0}
-          onMouseDown={(e) => {
-            e.preventDefault();
-            setOutputSplitDragging(true);
-          }}
-          onTouchStart={() => setOutputSplitDragging(true)}
-          onKeyDown={onOutputGutterKeyDown}
-        />
+        {!isMobile ? (
+          <div
+            className="output-split-gutter"
+            role="separator"
+            aria-orientation="horizontal"
+            aria-label="Resize editor and output height"
+            aria-valuenow={Math.round(editorPct)}
+            aria-valuemin={OUTPUT_SPLIT_MIN}
+            aria-valuemax={OUTPUT_SPLIT_MAX}
+            tabIndex={0}
+            onMouseDown={(e) => {
+              e.preventDefault();
+              setOutputSplitDragging(true);
+            }}
+            onTouchStart={() => setOutputSplitDragging(true)}
+            onKeyDown={onOutputGutterKeyDown}
+          />
+        ) : null}
 
         <div className="output">
           <div

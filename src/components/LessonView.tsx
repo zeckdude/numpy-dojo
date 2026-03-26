@@ -12,6 +12,7 @@ interface Props {
   index: number;
   isComplete: boolean;
   onResetLesson: () => void;
+  onOpenNav?: () => void;
   existingWhyIllustrationSrcs?: string[];
   docLinks: LessonDocLink[];
 }
@@ -21,6 +22,7 @@ export function LessonView({
   index,
   isComplete,
   onResetLesson,
+  onOpenNav,
   existingWhyIllustrationSrcs,
   docLinks,
 }: Props) {
@@ -36,7 +38,13 @@ export function LessonView({
         <div className="lesson-scroll-inner">
           <div className="lesson-reading">
             <div className="learn-pill-row">
-              <div className="badge">{lesson.badge}</div>
+              <button
+                type="button"
+                className="badge badge--nav-trigger"
+                onClick={onOpenNav}
+              >
+                {lesson.badge} <span className="badge-caret" aria-hidden>▾</span>
+              </button>
               <ShareSiteMenu
                 title={`${lesson.title} · NumPy Dojo`}
                 text={`Practice "${lesson.title}" on NumPy Dojo—free lesson with a live NumPy editor.`}

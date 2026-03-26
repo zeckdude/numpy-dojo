@@ -1,6 +1,15 @@
 'use client';
 
-import { useCallback, useEffect, useRef, useState, type ReactNode, type KeyboardEvent } from 'react';
+import {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+  type CSSProperties,
+  type ReactNode,
+  type KeyboardEvent,
+} from 'react';
 
 const STORAGE_KEY = 'np_dojo_split_pct';
 const DEFAULT_PCT = 50;
@@ -30,15 +39,17 @@ type Props = {
 export function SplitPanes({ id, left, right }: Props) {
   const containerRef = useRef<HTMLDivElement>(null);
   const pctRef = useRef(DEFAULT_PCT);
-  const [pct, setPct] = useState(() =>
-    typeof window !== 'undefined' ? readStoredPct() : DEFAULT_PCT
-  );
+  const [pct, setPct] = useState(DEFAULT_PCT);
   const [dragging, setDragging] = useState(false);
   const [wide, setWide] = useState(true);
 
   pctRef.current = pct;
 
   useEffect(() => {
+    setPct(readStoredPct());
+  }, []);
+
+  useLayoutEffect(() => {
     const mq = window.matchMedia('(min-width: 769px)');
     const update = () => setWide(mq.matches);
     update();
@@ -57,28 +68,41 @@ export function SplitPanes({ id, left, right }: Props) {
   }, []);
 
   useEffect(() => {
-    if (!dragging) return;
-    const onMove = (e: MouseEvent) => {
-      const el = containerRef.current;
-      if (!el) return;
+    if (!dragging || !wide) return;
+    const el = containerRef.current;
+    if (!el) return;
+
+    const applyFromClient = (clientX: number) => {
       const rect = el.getBoundingClientRect();
       const w = rect.width;
       if (w <= 0) return;
-      const x = e.clientX - rect.left;
-      applyPct((x / w) * 100);
+      applyPct(((clientX - rect.left) / w) * 100);
     };
-    const onUp = () => setDragging(false);
-    document.addEventListener('mousemove', onMove);
-    document.addEventListener('mouseup', onUp);
+
+    const onMouseMove = (e: MouseEvent) => applyFromClient(e.clientX);
+    const onTouchMove = (e: TouchEvent) => {
+      if (e.touches.length > 0) applyFromClient(e.touches[0].clientX);
+    };
+    const end = () => setDragging(false);
+
+    document.addEventListener('mousemove', onMouseMove);
+    document.addEventListener('mouseup', end);
+    document.addEventListener('touchmove', onTouchMove, { passive: true });
+    document.addEventListener('touchend', end);
+    document.addEventListener('touchcancel', end);
     document.body.style.cursor = 'col-resize';
     document.body.style.userSelect = 'none';
+
     return () => {
-      document.removeEventListener('mousemove', onMove);
-      document.removeEventListener('mouseup', onUp);
+      document.removeEventListener('mousemove', onMouseMove);
+      document.removeEventListener('mouseup', end);
+      document.removeEventListener('touchmove', onTouchMove);
+      document.removeEventListener('touchend', end);
+      document.removeEventListener('touchcancel', end);
       document.body.style.cursor = '';
       document.body.style.userSelect = '';
     };
-  }, [dragging, applyPct]);
+  }, [dragging, wide, applyPct]);
 
   const onGutterKeyDown = (e: KeyboardEvent) => {
     const p = pctRef.current;
@@ -97,29 +121,36 @@ export function SplitPanes({ id, left, right }: Props) {
     }
   };
 
+  const rootStyle: CSSProperties = wide
+    ? { gridTemplateColumns: `${pct}% 6px 1fr` }
+    : { gridTemplateColumns: '1fr' };
+
   return (
     <div
       ref={containerRef}
       id={id}
       className={`panes panes--resizable${dragging ? ' panes--resizing' : ''}`}
-      style={wide ? { gridTemplateColumns: `${pct}% 6px 1fr` } : undefined}
+      style={rootStyle}
     >
       <div className="panes-learn">{left}</div>
-      <div
-        className="panes-gutter"
-        role="separator"
-        aria-orientation="vertical"
-        aria-label="Resize lesson and code panels"
-        aria-valuenow={Math.round(pct)}
-        aria-valuemin={MIN_PCT}
-        aria-valuemax={MAX_PCT}
-        tabIndex={wide ? 0 : -1}
-        onMouseDown={(e) => {
-          e.preventDefault();
-          setDragging(true);
-        }}
-        onKeyDown={onGutterKeyDown}
-      />
+      {wide ? (
+        <div
+          className="panes-gutter"
+          role="separator"
+          aria-orientation="vertical"
+          aria-label="Resize lesson and code panels"
+          aria-valuenow={Math.round(pct)}
+          aria-valuemin={MIN_PCT}
+          aria-valuemax={MAX_PCT}
+          tabIndex={0}
+          onMouseDown={(e) => {
+            e.preventDefault();
+            setDragging(true);
+          }}
+          onTouchStart={() => setDragging(true)}
+          onKeyDown={onGutterKeyDown}
+        />
+      ) : null}
       {right}
     </div>
   );

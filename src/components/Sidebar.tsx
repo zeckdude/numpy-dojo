@@ -9,6 +9,8 @@ interface LessonSidebarProps {
   currentIndex: number;
   completedSet: Set<number>;
   onSelect: (idx: number) => void;
+  mobileOpen?: boolean;
+  mobileAnimated?: boolean;
   scenarios?: never;
   completedScenarios?: never;
 }
@@ -18,6 +20,8 @@ interface ScenarioSidebarProps {
   currentIndex: number;
   completedScenarios: Set<string>;
   onSelect: (idx: number) => void;
+  mobileOpen?: boolean;
+  mobileAnimated?: boolean;
   lessons?: never;
   completedSet?: never;
 }
@@ -31,7 +35,14 @@ export function Sidebar(props: SidebarProps) {
   return <ScenarioSidebar {...(props as ScenarioSidebarProps)} />;
 }
 
-function LessonSidebar({ lessons, currentIndex, completedSet, onSelect }: LessonSidebarProps) {
+function navClassName(mobileOpen?: boolean, mobileAnimated?: boolean) {
+  const cls: string[] = [];
+  if (mobileAnimated) cls.push('mobile-nav-animated');
+  if (mobileOpen) cls.push('mobile-open');
+  return cls.join(' ');
+}
+
+function LessonSidebar({ lessons, currentIndex, completedSet, onSelect, mobileOpen, mobileAnimated }: LessonSidebarProps) {
   let currentSection = '';
   const navRef = useRef<HTMLElement>(null);
   const activeItemRef = useRef<HTMLDivElement | null>(null);
@@ -57,7 +68,7 @@ function LessonSidebar({ lessons, currentIndex, completedSet, onSelect }: Lesson
   }, [currentIndex]);
 
   return (
-    <nav ref={navRef} onScroll={captureScroll}>
+    <nav ref={navRef} className={navClassName(mobileOpen, mobileAnimated)} onScroll={captureScroll}>
       {lessons.map((lesson, i) => {
         const showSection = lesson.section !== currentSection;
         if (showSection) currentSection = lesson.section;
@@ -86,7 +97,7 @@ function LessonSidebar({ lessons, currentIndex, completedSet, onSelect }: Lesson
   );
 }
 
-function ScenarioSidebar({ scenarios, currentIndex, completedScenarios, onSelect }: ScenarioSidebarProps) {
+function ScenarioSidebar({ scenarios, currentIndex, completedScenarios, onSelect, mobileOpen, mobileAnimated }: ScenarioSidebarProps) {
   let currentSection = '';
   const navRef = useRef<HTMLElement>(null);
   const activeItemRef = useRef<HTMLDivElement | null>(null);
@@ -112,7 +123,7 @@ function ScenarioSidebar({ scenarios, currentIndex, completedScenarios, onSelect
   }, [currentIndex]);
 
   return (
-    <nav ref={navRef} onScroll={captureScroll}>
+    <nav ref={navRef} className={navClassName(mobileOpen, mobileAnimated)} onScroll={captureScroll}>
       {scenarios.map((scenario, i) => {
         const showSection = scenario.section !== currentSection;
         if (showSection) currentSection = scenario.section;

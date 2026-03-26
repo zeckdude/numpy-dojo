@@ -1,0 +1,102 @@
+/*!
+ * Hamburgers — Elastic variant only (scoped for NumPy Dojo header menu)
+ * @see https://jonsuh.com/hamburgers/
+ * @license MIT Copyright (c) 2016 Jonathan Suh
+ */
+
+.header-more-trigger.hamburger {
+  cursor: pointer;
+  transition-property: opacity, filter, border-color, color, background;
+  transition-duration: 0.15s;
+  transition-timing-function: linear;
+  font: inherit;
+  text-transform: none;
+  margin: 0;
+  overflow: visible;
+}
+
+.header-more-trigger.hamburger:hover {
+  opacity: 0.7;
+}
+
+.header-more[open] .header-more-trigger.hamburger:hover {
+  opacity: 0.7;
+}
+
+/* Scale shrinks the drawing but not layout; negative margins match the visual size so flex centers the icon in 32×32. */
+.header-more-trigger.hamburger .hamburger-box {
+  --hamburger-scale: 0.52;
+  width: 40px;
+  height: 24px;
+  display: block;
+  position: relative;
+  flex-shrink: 0;
+  transform: scale(var(--hamburger-scale));
+  transform-origin: center center;
+  margin: calc(-12px * (1 - var(--hamburger-scale))) calc(-20px * (1 - var(--hamburger-scale)));
+}
+
+.header-more-trigger.hamburger .hamburger-inner {
+  display: block;
+  top: 50%;
+  margin-top: -2px;
+}
+
+.header-more-trigger.hamburger .hamburger-inner,
+.header-more-trigger.hamburger .hamburger-inner::before,
+.header-more-trigger.hamburger .hamburger-inner::after {
+  width: 40px;
+  height: 4px;
+  background-color: currentColor;
+  border-radius: 4px;
+  position: absolute;
+  transition-property: transform, opacity;
+  transition-duration: 0.15s;
+  transition-timing-function: ease;
+}
+
+.header-more-trigger.hamburger .hamburger-inner::before,
+.header-more-trigger.hamburger .hamburger-inner::after {
+  content: '';
+  display: block;
+}
+
+.header-more-trigger.hamburger .hamburger-inner::before {
+  top: -10px;
+}
+
+.header-more-trigger.hamburger .hamburger-inner::after {
+  bottom: -10px;
+}
+
+/* Elastic — open state driven by <details open> instead of .is-active */
+.header-more-trigger.hamburger--elastic .hamburger-inner {
+  top: 2px;
+  transition-duration: 0.275s;
+  transition-timing-function: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+.header-more-trigger.hamburger--elastic .hamburger-inner::before {
+  top: 10px;
+  transition: opacity 0.125s 0.275s ease;
+}
+
+.header-more-trigger.hamburger--elastic .hamburger-inner::after {
+  top: 20px;
+  transition: transform 0.275s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+.header-more[open] .header-more-trigger.hamburger--elastic .hamburger-inner {
+  transform: translate3d(0, 10px, 0) rotate(135deg);
+  transition-delay: 0.075s;
+}
+
+.header-more[open] .header-more-trigger.hamburger--elastic .hamburger-inner::before {
+  transition-delay: 0s;
+  opacity: 0;
+}
+
+.header-more[open] .header-more-trigger.hamburger--elastic .hamburger-inner::after {
+  transform: translate3d(0, -20px, 0) rotate(-270deg);
+  transition-delay: 0.075s;
+}

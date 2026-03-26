@@ -15,12 +15,13 @@ interface Props {
   scenario: Scenario;
   savedCode: Record<string, string>;
   onSaveCode: (key: string, code: string) => void;
+  onOpenNav?: () => void;
   completedScenarios: Set<string>;
   onCompleteScenario: (id: string) => void;
   toast: (msg: string) => void;
 }
 
-export function ScenarioView({ scenario, savedCode, onSaveCode, completedScenarios, onCompleteScenario, toast }: Props) {
+export function ScenarioView({ scenario, savedCode, onSaveCode, onOpenNav, completedScenarios, onCompleteScenario, toast }: Props) {
   const [currentStep, setCurrentStep] = useState(0);
   const [completedSteps, setCompletedSteps] = useState<Set<number>>(new Set());
   const [hintOpen, setHintOpen] = useState(false);
@@ -50,7 +51,13 @@ export function ScenarioView({ scenario, savedCode, onSaveCode, completedScenari
       left={
         <div className="learn">
         <div className="learn-pill-row">
-          <div className="badge">Scenario</div>
+          <button
+            type="button"
+            className="badge badge--nav-trigger"
+            onClick={onOpenNav}
+          >
+            Scenario <span className="badge-caret" aria-hidden>▾</span>
+          </button>
           <ShareSiteMenu
             title={`${scenario.title} · NumPy Dojo`}
             text={`Try the scenario "${scenario.title}" on NumPy Dojo—short multi-step NumPy exercises.`}

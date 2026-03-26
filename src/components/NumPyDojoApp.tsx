@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { useState, useEffect, useLayoutEffect, useCallback, useMemo } from 'react';
+import { useState, useEffect, useLayoutEffect, useCallback, useMemo, useRef } from 'react';
 import { lessons } from '../data/lessons';
 import { LESSON_DOC_LINKS } from '../data/lessonDocLinks';
 import { scenarios } from '../data/scenarios';
@@ -72,6 +72,18 @@ export function NumPyDojoApp({
   const [completedScenarios, setCompletedScenarios] = useState<Set<string>>(new Set());
   const [savedCode, setSavedCode] = useState<Record<string, string>>({});
   const [toastMsg, setToastMsg] = useState('');
+  const [mobileNavOpen, setMobileNavOpen] = useState(false);
+  const [mobileNavAnimated, setMobileNavAnimated] = useState(false);
+
+  const openMobileNav = useCallback(() => {
+    setMobileNavAnimated(true);
+    setMobileNavOpen(true);
+  }, []);
+
+  const closeMobileNav = useCallback(() => {
+    setMobileNavOpen(false);
+    setTimeout(() => setMobileNavAnimated(false), 300);
+  }, []);
   const [dialog, setDialog] = useState<{
     title: string;
     msg: string;
@@ -118,6 +130,27 @@ export function NumPyDojoApp({
     const idx = scenarioIndexFromId(scenarioId);
     if (idx !== null) setCurrentScenario(idx);
   }, [scenarioId]);
+
+  const headerMoreRef = useRef<HTMLDetailsElement>(null);
+
+  useEffect(() => {
+    const details = headerMoreRef.current;
+    if (!details) return;
+
+    const onPointerDown = (e: PointerEvent) => {
+      if (!details.open) return;
+      const t = e.target;
+      if (!(t instanceof Node) || details.contains(t)) return;
+      details.open = false;
+    };
+
+    document.addEventListener('pointerdown', onPointerDown);
+    return () => document.removeEventListener('pointerdown', onPointerDown);
+  }, []);
+
+  useEffect(() => {
+    closeMobileNav();
+  }, [route, closeMobileNav]);
 
   useEffect(() => {
     saveString(KEY_LAST_LESSON_SLUG, lessonSlugAt(currentLesson));
@@ -341,44 +374,92 @@ export function NumPyDojoApp({
                 <span className="brand-name-dojo"> Dojo</span>
               </span>
             </Link>
-            {dojoOpen && (
-              <Link href="/" className="hdr-nav-dashboard">
-                Dashboard
-              </Link>
-            )}
           </div>
           <div className="header-right">
             <ThemeSwitch />
-            {dojoOpen && headerShareProps ? (
-              <ShareSiteMenu {...headerShareProps} className="dashboard-share-menu--header" />
-            ) : null}
-            <div className="meter">
-              <span className="meter-label">
-                <b>{totalComplete}</b> / {totalItems}
-              </span>
-              <div className="meter-track">
-                <div
-                  className="meter-fill"
-                  style={{ width: `${(totalComplete / totalItems) * 100}%` }}
-                />
+            <div className="header-tools-desktop">
+              {dojoOpen && headerShareProps ? (
+                <ShareSiteMenu {...headerShareProps} className="dashboard-share-menu--header" />
+              ) : null}
+              <div className="meter">
+                <span className="meter-label">
+                  <b>{totalComplete}</b> / {totalItems}
+                </span>
+                <div className="meter-track">
+                  <div
+                    className="meter-fill"
+                    style={{ width: `${(totalComplete / totalItems) * 100}%` }}
+                  />
+                </div>
               </div>
+              {totalComplete > 0 && (
+                <button
+                  className="hdr-btn"
+                  type="button"
+                  onClick={() =>
+                    setDialog({
+                      title: 'Reset All Progress',
+                      msg: 'This will clear all progress and saved code. Cannot be undone.',
+                      label: 'Reset Everything',
+                      onConfirm: resetAll,
+                    })
+                  }
+                >
+                  Reset All
+                </button>
+              )}
             </div>
-            {totalComplete > 0 && (
-              <button
-                className="hdr-btn"
-                type="button"
-                onClick={() =>
-                  setDialog({
-                    title: 'Reset All Progress',
-                    msg: 'This will clear all progress and saved code. Cannot be undone.',
-                    label: 'Reset Everything',
-                    onConfirm: resetAll,
-                  })
-                }
-              >
-                Reset All
-              </button>
-            )}
+            <details ref={headerMoreRef} className="header-more">
+              <summary className="header-more-trigger hamburger hamburger--elastic" aria-label="Menu">
+                <span className="hamburger-box" aria-hidden="true">
+                  <span className="hamburger-inner" />
+                </span>
+              </summary>
+              <div className="header-more-panel">
+                {dojoOpen && headerShareProps ? (
+                  <div className="header-more-section">
+                    <h2 className="header-more-section-title">Invite others</h2>
+                    <ShareSiteMenu
+                      {...headerShareProps}
+                      className="dashboard-share-menu--header dashboard-share-menu--header-more"
+                    />
+                  </div>
+                ) : null}
+                <div className="header-more-section">
+                  <h2 className="header-more-section-title">Progress</h2>
+                  <div className="meter meter--stacked">
+                    <span className="meter-label">
+                      <b>{totalComplete}</b> / {totalItems}
+                    </span>
+                    <div className="meter-track meter-track--wide">
+                      <div
+                        className="meter-fill"
+                        style={{ width: `${(totalComplete / totalItems) * 100}%` }}
+                      />
+                    </div>
+                  </div>
+                </div>
+                {totalComplete > 0 && (
+                  <div className="header-more-section">
+                    <h2 className="header-more-section-title">Saved data</h2>
+                    <button
+                      className="hdr-btn header-more-reset"
+                      type="button"
+                      onClick={() =>
+                        setDialog({
+                          title: 'Reset All Progress',
+                          msg: 'This will clear all progress and saved code. Cannot be undone.',
+                          label: 'Reset Everything',
+                          onConfirm: resetAll,
+                        })
+                      }
+                    >
+                      Reset All
+                    </button>
+                  </div>
+                )}
+              </div>
+            </details>
           </div>
         </header>
 
@@ -387,7 +468,12 @@ export function NumPyDojoApp({
             lessons={lessons}
             currentIndex={currentLesson}
             completedSet={completedLessons}
-            onSelect={(i) => router.push('/lessons/' + lessonSlugAt(i), { scroll: false })}
+            onSelect={(i) => {
+              setMobileNavOpen(false);
+              router.push('/lessons/' + lessonSlugAt(i), { scroll: false });
+            }}
+            mobileOpen={mobileNavOpen}
+            mobileAnimated={mobileNavAnimated}
           />
         )}
         {dojoOpen && activeTab === 'scenarios' && (
@@ -395,7 +481,18 @@ export function NumPyDojoApp({
             scenarios={scenarios}
             currentIndex={currentScenario}
             completedScenarios={completedScenarios}
-            onSelect={(i) => router.push('/scenarios/' + scenarios[i].id, { scroll: false })}
+            onSelect={(i) => {
+              closeMobileNav();
+              router.push('/scenarios/' + scenarios[i].id, { scroll: false });
+            }}
+            mobileOpen={mobileNavOpen}
+            mobileAnimated={mobileNavAnimated}
+          />
+        )}
+        {mobileNavOpen && (
+          <div
+            className="mobile-nav-backdrop"
+            onClick={closeMobileNav}
           />
         )}
         {dojoOpen && activeTab === 'quizzes' && (
@@ -445,6 +542,7 @@ export function NumPyDojoApp({
                       isComplete={completedLessons.has(currentLesson)}
                       existingWhyIllustrationSrcs={existingWhyIllustrationSrcs}
                       docLinks={LESSON_DOC_LINKS[currentLesson] ?? []}
+                      onOpenNav={openMobileNav}
                       onResetLesson={() =>
                         setDialog({
                           title: `Reset "${lessons[currentLesson].title}"`,
@@ -479,6 +577,7 @@ export function NumPyDojoApp({
                   scenario={scenarios[currentScenario]}
                   savedCode={savedCode}
                   onSaveCode={saveCodeForKey}
+                  onOpenNav={openMobileNav}
                   completedScenarios={completedScenarios}
                   onCompleteScenario={(id) => {
                     const next = new Set(completedScenarios);
