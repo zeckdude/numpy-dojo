@@ -2692,9 +2692,21 @@ a.module-card.module-card--link:focus-visible {
     overflow-x: hidden;
   }
 
-  /* Safari auto-zooms focused editors when base font < 16px; breaks layout on blur. */
+  /*
+   * Safari: min 16px avoids input zoom; tighter unitless line-height + smoothing reduce
+   * iOS glyph “striping” on syntax-colored tokens (subpixel 1.7×em line boxes + GPU composite).
+   */
   .cm-editor-container .cm-editor {
     font-size: max(16px, var(--editor-fs)) !important;
+    isolation: isolate;
+  }
+  .cm-editor-container .cm-scroller {
+    line-height: 1.625 !important;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  .cm-editor-container .cm-content {
+    text-rendering: geometricPrecision;
   }
 
   header {
