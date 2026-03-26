@@ -50,7 +50,9 @@ export function ScenarioView({ scenario, savedCode, onSaveCode, onOpenNav, compl
   return (
     <SplitPanes
       left={
-        <div className="learn">
+        <div className="learn learn--scenario">
+          <div className="lesson-scroll">
+            <div className="lesson-scroll-inner">
         <div className="learn-pill-row">
           <button
             type="button"
@@ -145,6 +147,8 @@ export function ScenarioView({ scenario, savedCode, onSaveCode, onOpenNav, compl
             ✅ Previously completed
           </div>
         )}
+            </div>
+          </div>
         </div>
       }
       right={

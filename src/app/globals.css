@@ -645,8 +645,9 @@ main {
   font-size: var(--learn-fs);
 }
 
-/* Lessons: scroll narrative + resources; task band pinned to bottom of pane */
-.learn.learn--lesson {
+/* Lessons + scenarios (split left): same padding and scroll shell; task band is lesson-only */
+.learn.learn--lesson,
+.learn.learn--scenario {
   display: flex;
   flex-direction: column;
   min-height: 0;
@@ -655,7 +656,8 @@ main {
   padding: 28px 0 28px 32px;
 }
 
-.learn.learn--lesson .lesson-scroll {
+.learn.learn--lesson .lesson-scroll,
+.learn.learn--scenario .lesson-scroll {
   flex: 1;
   min-height: 0;
   overflow-x: hidden;
@@ -664,7 +666,8 @@ main {
 }
 
 /* Inset scroll content from scrollbar (outer .lesson-scroll is edge-to-edge) */
-.learn.learn--lesson .lesson-scroll-inner {
+.learn.learn--lesson .lesson-scroll-inner,
+.learn.learn--scenario .lesson-scroll-inner {
   padding-right: 32px;
   min-width: 0;
   max-width: 100%;
@@ -2875,12 +2878,13 @@ a.module-card.module-card--link:focus-visible {
     border-left: none;
   }
 
-  .learn:not(.learn--lesson) {
+  .learn:not(.learn--lesson):not(.learn--scenario) {
     overflow: visible;
     overflow-x: hidden;
   }
 
-  .learn.learn--lesson {
+  .learn.learn--lesson,
+  .learn.learn--scenario {
     display: flex;
     flex-direction: column;
     overflow: visible;
@@ -2888,7 +2892,8 @@ a.module-card.module-card--link:focus-visible {
     padding: 20px 0 20px 16px;
   }
 
-  .learn.learn--lesson .lesson-scroll {
+  .learn.learn--lesson .lesson-scroll,
+  .learn.learn--scenario .lesson-scroll {
     flex: 0 1 auto;
     min-height: 0;
     overflow: visible;
@@ -2897,7 +2902,8 @@ a.module-card.module-card--link:focus-visible {
     padding-bottom: 12px;
   }
 
-  .learn.learn--lesson .lesson-scroll-inner {
+  .learn.learn--lesson .lesson-scroll-inner,
+  .learn.learn--scenario .lesson-scroll-inner {
     padding-right: 16px;
     flex: 0 1 auto;
     overflow: visible;
