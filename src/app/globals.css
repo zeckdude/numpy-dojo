@@ -876,7 +876,8 @@ main {
 .lesson-resources-details > summary::after {
   float: none;
   flex-shrink: 0;
-  margin-top: 3px;
+  align-self: center;
+  margin-top: 0;
 }
 
 .lesson-resources-summary-text {
@@ -1086,8 +1087,9 @@ html[data-theme='light'] .code-sample-header {
 .lesson-details summary::after {
   content: '▸';
   float: right;
-  font-size: 0.714em;
-  opacity: 0.8;
+  font-size: 1.28em;
+  line-height: 1;
+  opacity: 0.92;
 }
 
 .lesson-details[open] summary {

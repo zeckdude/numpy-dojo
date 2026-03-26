@@ -5,6 +5,7 @@ import { useState } from 'react';
 import { ModuleSummary } from '../data/modules';
 import { lessonSlugAt } from '../lib/routes';
 import { track } from '../lib/analytics';
+import { htmlToPlainText } from '../lib/htmlPlainText';
 import { ShareSiteMenu } from './ShareSiteMenu';
 
 export interface ScenarioCardSummary {
@@ -305,7 +306,7 @@ export function Dashboard({
                 <p className="module-card-meta">{s.section}</p>
                 <h4 className="module-card-title">{s.title}</h4>
                 <p className="module-card-desc module-card-desc--clamp module-card-desc--footer">
-                  {s.description}
+                  {htmlToPlainText(s.description)}
                 </p>
               </Link>
             ))}
