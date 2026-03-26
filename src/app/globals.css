@@ -2672,22 +2672,18 @@ a.module-card.module-card--link:focus-visible {
 
 /* ━━━ MOBILE ━━━ */
 @media (max-width: 768px) {
-  /*
-   * iOS: 100vh + keyboard leaves stale layout; --vv-height tracks visualViewport.
-   * Also avoids mismatch with inner scroll (main) after keyboard dismiss.
-   */
+  /* Shell height uses dvh (not visualViewport px) so code-pane min-heights stay coherent when the keyboard opens. */
   body {
     height: 100vh;
-    max-height: 100vh;
-    height: var(--vv-height, 100dvh);
-    max-height: var(--vv-height, 100dvh);
+    max-height: none;
+    height: 100dvh;
   }
 
   .app {
     height: 100vh;
-    max-height: 100vh;
-    height: var(--vv-height, 100dvh);
-    max-height: var(--vv-height, 100dvh);
+    min-height: 0;
+    height: 100dvh;
+    max-height: none;
     grid-template-columns: 1fr !important;
     overflow-x: hidden;
   }
@@ -2698,7 +2694,6 @@ a.module-card.module-card--link:focus-visible {
    */
   .cm-editor-container .cm-editor {
     font-size: max(16px, var(--editor-fs)) !important;
-    isolation: isolate;
   }
   .cm-editor-container .cm-scroller {
     line-height: 1.625 !important;
@@ -2861,9 +2856,10 @@ a.module-card.module-card--link:focus-visible {
     overflow: visible;
   }
 
+  /* svh tracks smallest viewport (keyboard open) on iOS; avoids a tall empty editor when dvh stays large */
   .panes > .code-pane {
-    min-height: 50vh;
-    min-height: min(52dvh, 540px);
+    min-height: min(280px, 52vh);
+    min-height: min(280px, 52svh);
   }
 
   .panes.panes--mobile-code-expanded > .code-pane {

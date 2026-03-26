@@ -2,14 +2,7 @@
 
 import { useEffect } from 'react';
 
-const VV_VAR = '--vv-height';
 const MQ = '(max-width: 768px)';
-
-function applyVisualViewportHeight() {
-  const vv = window.visualViewport;
-  if (!vv) return;
-  document.documentElement.style.setProperty(VV_VAR, `${Math.round(vv.height)}px`);
-}
 
 function clampMainScroll() {
   const main = document.querySelector('main');
@@ -19,8 +12,9 @@ function clampMainScroll() {
 }
 
 /**
- * iOS Safari: keep shell height in sync with visualViewport when the keyboard
- * opens/closes, and clamp main scroll so lesson content above sticky tabs stays reachable.
+ * iOS Safari: after the keyboard opens/closes, clamp `main` scroll so content above
+ * sticky tabs stays reachable. (We avoid locking body height to visualViewport — that
+ * interacted badly with code-pane min-heights and left a blank editor region.)
  */
 export function MobileViewportShell() {
   useEffect(() => {
@@ -30,17 +24,14 @@ export function MobileViewportShell() {
     const stopVv = () => {
       vvCleanup?.();
       vvCleanup = undefined;
-      document.documentElement.style.removeProperty(VV_VAR);
     };
 
     const startVv = () => {
       stopVv();
-      applyVisualViewportHeight();
       clampMainScroll();
 
       const vv = window.visualViewport;
       const onVv = () => {
-        applyVisualViewportHeight();
         requestAnimationFrame(clampMainScroll);
       };
 
