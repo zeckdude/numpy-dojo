@@ -4,6 +4,7 @@
 import { useState, useRef, useEffect, useCallback, type KeyboardEvent } from 'react';
 import { executeCode } from '../lib/executor';
 import { captureClientError, track } from '../lib/analytics';
+import { CodeMirrorEditor } from './CodeMirrorEditor';
 
 const OUTPUT_SPLIT_STORAGE_KEY = 'np_dojo_editor_output_pct';
 const OUTPUT_SPLIT_DEFAULT = 58;
@@ -44,7 +45,7 @@ export function CodeEditor({ codeKey, savedCode, validate, onSaveCode, onPass, o
   const [mobileEditorExpanded, setMobileEditorExpanded] = useState(false);
   const [editorPct, setEditorPct] = useState(OUTPUT_SPLIT_DEFAULT);
   const [outputSplitDragging, setOutputSplitDragging] = useState(false);
-  const editorRef = useRef<HTMLTextAreaElement>(null);
+  const editorRef = useRef<HTMLDivElement>(null);
   const codePaneRef = useRef<HTMLDivElement>(null);
   const outputSplitRef = useRef<HTMLDivElement>(null);
   const editorPctRef = useRef(editorPct);
@@ -127,22 +128,6 @@ export function CodeEditor({ codeKey, savedCode, validate, onSaveCode, onPass, o
 
     if (!outputOpen) setOutputOpen(true);
   }, [code, codeKey, validate, onSaveCode, onPass, outputOpen]);
-
-  const handleKeyDown = useCallback((e: React.KeyboardEvent<HTMLTextAreaElement>) => {
-    if (e.key === 'Tab') {
-      e.preventDefault();
-      const ta = e.currentTarget;
-      const start = ta.selectionStart;
-      const end = ta.selectionEnd;
-      const newCode = code.substring(0, start) + '    ' + code.substring(end);
-      setCode(newCode);
-      setTimeout(() => { ta.selectionStart = ta.selectionEnd = start + 4; }, 0);
-    }
-    if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
-      e.preventDefault();
-      runCode();
-    }
-  }, [code, runCode]);
 
   const copyCode = useCallback(() => {
     const text = code;
@@ -286,14 +271,11 @@ export function CodeEditor({ codeKey, savedCode, validate, onSaveCode, onPass, o
         }}
       >
         <div className="code-split-top">
-          <div className="editor-wrap">
-            <textarea
-              ref={editorRef}
-              className="editor"
+          <div className="editor-wrap" ref={editorRef}>
+            <CodeMirrorEditor
               value={code}
-              onChange={(e) => setCode(e.target.value)}
-              onKeyDown={handleKeyDown}
-              spellCheck={false}
+              onChange={setCode}
+              onRun={runCode}
               placeholder="# Write code here..."
             />
             <div className="kb-hint">⌘⏎ run · ⌘← → nav</div>

@@ -6,6 +6,7 @@ import { Lesson, LessonDocLink } from '../data/types';
 import { docLinkLogoProps } from '../lib/docLinkSources';
 import { WhyItMattersSection } from './WhyItMattersSection';
 import { ShareSiteMenu } from './ShareSiteMenu';
+import { HighlightedProse } from './HighlightedProse';
 
 interface Props {
   lesson: Lesson;
@@ -53,7 +54,7 @@ export function LessonView({
               />
             </div>
             <h2>{lesson.title}</h2>
-            <div className="prose" dangerouslySetInnerHTML={{ __html: lesson.instruction }} />
+            <HighlightedProse html={lesson.instruction} className="prose" />
             {lesson.whyItMatters ? (
               <WhyItMattersSection
                 html={lesson.whyItMatters}
