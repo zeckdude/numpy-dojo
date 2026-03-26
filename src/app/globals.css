@@ -518,6 +518,16 @@ nav {
   color: var(--accent);
 }
 
+.nav-item.done.active .nav-dot {
+  border-color: var(--accent);
+  background: var(--accent);
+  color: #ffffff;
+}
+
+.nav-item.done.active .nav-title {
+  color: var(--accent);
+}
+
 .nav-title {
   font-size: 12px;
   font-weight: 500;
