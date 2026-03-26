@@ -99,6 +99,11 @@ html[data-theme='light'] {
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
 body {
   font-family: 'IBM Plex Sans', sans-serif;
   background: var(--bg-deep);
@@ -2667,9 +2672,29 @@ a.module-card.module-card--link:focus-visible {
 
 /* ━━━ MOBILE ━━━ */
 @media (max-width: 768px) {
+  /*
+   * iOS: 100vh + keyboard leaves stale layout; --vv-height tracks visualViewport.
+   * Also avoids mismatch with inner scroll (main) after keyboard dismiss.
+   */
+  body {
+    height: 100vh;
+    max-height: 100vh;
+    height: var(--vv-height, 100dvh);
+    max-height: var(--vv-height, 100dvh);
+  }
+
   .app {
+    height: 100vh;
+    max-height: 100vh;
+    height: var(--vv-height, 100dvh);
+    max-height: var(--vv-height, 100dvh);
     grid-template-columns: 1fr !important;
     overflow-x: hidden;
+  }
+
+  /* Safari auto-zooms focused editors when base font < 16px; breaks layout on blur. */
+  .cm-editor-container .cm-editor {
+    font-size: max(16px, var(--editor-fs)) !important;
   }
 
   header {

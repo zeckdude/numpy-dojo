@@ -1,9 +1,16 @@
-import type { Metadata } from 'next';
+import type { Metadata, Viewport } from 'next';
 import { Suspense } from 'react';
 import './globals.css';
 import './hamburgers-elastic.css';
 import { PostHogInit } from '@/components/PostHogInit';
 import { AnalyticsPageView } from '@/components/AnalyticsPageView';
+import { MobileViewportShell } from '@/components/MobileViewportShell';
+
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  viewportFit: 'cover',
+};
 
 export const metadata: Metadata = {
   title: 'NumPy Dojo',
@@ -41,6 +48,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         />
       </head>
       <body suppressHydrationWarning>
+        <MobileViewportShell />
         <PostHogInit />
         <Suspense fallback={null}>
           <AnalyticsPageView />
