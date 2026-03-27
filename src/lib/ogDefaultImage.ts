@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { getOgImageOrigin } from './siteUrl';
+import { PRODUCTION_SITE_ORIGIN } from './siteUrl';
 
 /**
  * Static OG image (see `npm run generate-og`).
@@ -11,9 +11,9 @@ export const OG_IMAGE_HEIGHT = 630;
 
 export const DEFAULT_OG_IMAGE_ALT = 'NumPy Dojo — Learn NumPy by doing';
 
-/** Absolute URL for share images; never points at localhost (see `getOgImageOrigin`). */
+/** Always production so social crawlers fetch a real PNG, not a preview deployment HTML shell. */
 export function getDefaultOgImageAbsoluteUrl(): string {
-  return `${getOgImageOrigin()}${OG_IMAGE_PATH}`;
+  return `${PRODUCTION_SITE_ORIGIN}${OG_IMAGE_PATH}`;
 }
 
 export function defaultOgImages(): NonNullable<NonNullable<Metadata['openGraph']>['images']> {
