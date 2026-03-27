@@ -1,4 +1,5 @@
 import path from 'path';
+import react from '@vitejs/plugin-react';
 import { defineConfig } from 'vitest/config';
 
 /** Lessons/scenarios are mostly static data with many `validate` fns never run in tests — excluding keeps thresholds meaningful. */
@@ -11,14 +12,19 @@ const coverageInclude = [
 ];
 
 export default defineConfig({
+  plugins: [react()],
   test: {
     environment: 'node',
+    environmentMatchGlobs: [
+      ['src/components/**/*.test.tsx', 'jsdom'],
+    ],
     setupFiles: ['./vitest.setup.ts'],
     coverage: {
       provider: 'v8',
       include: coverageInclude,
       exclude: [
         '**/*.test.ts',
+        '**/*.test.tsx',
         '**/types.ts',
       ],
       thresholds: {
