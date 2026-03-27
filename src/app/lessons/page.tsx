@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { defaultOgImages, OG_IMAGE_PATH } from '@/lib/ogDefaultImage';
+import { defaultOgImages, defaultTwitterImages } from '@/lib/ogDefaultImage';
 import { LESSONS_INDEX_DESCRIPTION, LESSONS_INDEX_TITLE } from '@/lib/shareCopy';
 import { LessonsIndexRedirect } from './LessonsIndexRedirect';
 
@@ -17,7 +17,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: LESSONS_INDEX_TITLE,
     description: LESSONS_INDEX_DESCRIPTION,
-    images: [OG_IMAGE_PATH],
+    images: defaultTwitterImages(),
   },
 };
 

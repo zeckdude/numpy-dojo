@@ -4,7 +4,7 @@ import { NumPyDojoApp } from '@/components/NumPyDojoApp';
 import { lessons } from '@/data/lessons';
 import { getExistingWhyIllustrationSrcs } from '@/lib/illustrationPaths';
 import { LESSON_PATH_SLUGS, lessonIndexFromSlug } from '@/lib/routes';
-import { defaultOgImages, OG_IMAGE_PATH } from '@/lib/ogDefaultImage';
+import { defaultOgImages, defaultTwitterImages } from '@/lib/ogDefaultImage';
 import { lessonOgDescription, lessonShareTitle } from '@/lib/shareCopy';
 
 export const dynamic = 'force-dynamic';
@@ -38,7 +38,7 @@ export async function generateMetadata({
       card: 'summary_large_image',
       title,
       description,
-      images: [OG_IMAGE_PATH],
+      images: defaultTwitterImages(),
     },
   };
 }

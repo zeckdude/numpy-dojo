@@ -5,9 +5,18 @@ import './hamburgers-elastic.css';
 import { PostHogInit } from '@/components/PostHogInit';
 import { AnalyticsPageView } from '@/components/AnalyticsPageView';
 import { MobileViewportShell } from '@/components/MobileViewportShell';
-import { defaultOgImages, OG_IMAGE_PATH } from '@/lib/ogDefaultImage';
+import {
+  DEFAULT_OG_IMAGE_ALT,
+  defaultOgImages,
+  defaultTwitterImages,
+  getDefaultOgImageAbsoluteUrl,
+  OG_IMAGE_HEIGHT,
+  OG_IMAGE_WIDTH,
+} from '@/lib/ogDefaultImage';
 import { DEFAULT_SHARE_DESCRIPTION, DEFAULT_SHARE_TITLE, SITE_NAME } from '@/lib/shareCopy';
 import { getMetadataBase } from '@/lib/siteUrl';
+
+const defaultOgImageUrl = getDefaultOgImageAbsoluteUrl();
 
 export const viewport: Viewport = {
   width: 'device-width',
@@ -32,7 +41,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: DEFAULT_SHARE_TITLE,
     description: DEFAULT_SHARE_DESCRIPTION,
-    images: [OG_IMAGE_PATH],
+    images: defaultTwitterImages(),
   },
   icons: {
     icon: "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🥋</text></svg>",
@@ -61,6 +70,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
         <meta name="color-scheme" content="dark light" />
+        {/* Explicit og:image — structured tags follow og:image per ogp.me; helps Facebook resolve size before async fetch. */}
+        <meta property="og:image" content={defaultOgImageUrl} />
+        <meta property="og:image:secure_url" content={defaultOgImageUrl} />
+        <meta property="og:image:type" content="image/png" />
+        <meta property="og:image:width" content={String(OG_IMAGE_WIDTH)} />
+        <meta property="og:image:height" content={String(OG_IMAGE_HEIGHT)} />
+        <meta property="og:image:alt" content={DEFAULT_OG_IMAGE_ALT} />
         <link
           href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600;700;800&family=Playfair+Display:wght@700;800&display=swap"
           rel="stylesheet"

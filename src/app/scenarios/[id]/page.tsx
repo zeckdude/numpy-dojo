@@ -5,7 +5,7 @@ import { scenarios } from '@/data/scenarios';
 import { getExistingWhyIllustrationSrcs } from '@/lib/illustrationPaths';
 import { htmlToPlainText } from '@/lib/htmlPlainText';
 import { SCENARIO_PATH_IDS, scenarioIndexFromId } from '@/lib/routes';
-import { defaultOgImages, OG_IMAGE_PATH } from '@/lib/ogDefaultImage';
+import { defaultOgImages, defaultTwitterImages } from '@/lib/ogDefaultImage';
 import { scenarioOgDescription, scenarioShareTitle } from '@/lib/shareCopy';
 
 export const dynamic = 'force-dynamic';
@@ -39,7 +39,7 @@ export async function generateMetadata({
       card: 'summary_large_image',
       title,
       description,
-      images: [OG_IMAGE_PATH],
+      images: defaultTwitterImages(),
     },
   };
 }

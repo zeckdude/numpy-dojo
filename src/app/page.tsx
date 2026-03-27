@@ -1,13 +1,17 @@
 import type { Metadata } from 'next';
 import { NumPyDojoApp } from '@/components/NumPyDojoApp';
 import { getExistingWhyIllustrationSrcs } from '@/lib/illustrationPaths';
+import { defaultOgImages } from '@/lib/ogDefaultImage';
 
 export const dynamic = 'force-dynamic';
 
-/** Homepage `og:url` + canonical help LinkedIn/Facebook match the right URL. Images come from root layout. */
+/**
+ * Homepage `og:url` + canonical. Child `openGraph` replaces the layout’s entire openGraph in Next.js
+ * (no deep merge), so we must repeat `images` here or crawlers lose `og:image` / dimensions.
+ */
 export const metadata: Metadata = {
   alternates: { canonical: '/' },
-  openGraph: { url: '/' },
+  openGraph: { url: '/', images: defaultOgImages() },
 };
 
 export default function HomePage() {
