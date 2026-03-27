@@ -4,3 +4,5 @@ out/
 .vercel/
 .DS_Store
 *.log
+
+coverage/
