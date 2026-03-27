@@ -1,24 +1,26 @@
-'use client';
+import type { Metadata } from 'next';
+import { defaultOgImages, OG_IMAGE_PATH } from '@/lib/ogDefaultImage';
+import { SCENARIOS_INDEX_DESCRIPTION, SCENARIOS_INDEX_TITLE } from '@/lib/shareCopy';
+import { ScenariosIndexRedirect } from './ScenariosIndexRedirect';
 
-import { useEffect } from 'react';
-import { useRouter } from 'next/navigation';
-import { scenarios } from '@/data/scenarios';
-import { loadJSON } from '@/lib/storage';
+export const metadata: Metadata = {
+  title: SCENARIOS_INDEX_TITLE,
+  description: SCENARIOS_INDEX_DESCRIPTION,
+  openGraph: {
+    title: SCENARIOS_INDEX_TITLE,
+    description: SCENARIOS_INDEX_DESCRIPTION,
+    url: '/scenarios',
+    type: 'website',
+    images: defaultOgImages(),
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: SCENARIOS_INDEX_TITLE,
+    description: SCENARIOS_INDEX_DESCRIPTION,
+    images: [OG_IMAGE_PATH],
+  },
+};
 
 export default function ScenariosIndexPage() {
-  const router = useRouter();
-
-  useEffect(() => {
-    const done = new Set(loadJSON<string[]>('np_dojo_scenarios', []));
-    let idx = scenarios.length - 1;
-    for (let i = 0; i < scenarios.length; i++) {
-      if (!done.has(scenarios[i].id)) {
-        idx = i;
-        break;
-      }
-    }
-    router.replace('/scenarios/' + scenarios[idx].id);
-  }, [router]);
-
-  return <div className="app app--dashboard" />;
+  return <ScenariosIndexRedirect />;
 }

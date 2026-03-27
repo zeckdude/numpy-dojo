@@ -2,10 +2,9 @@
 
 import { useEffect, useRef, useState } from 'react';
 import { track } from '../lib/analytics';
+import { DEFAULT_SHARE_TEXT, DEFAULT_SHARE_TITLE } from '../lib/shareCopy';
 
-export const DEFAULT_SHARE_TITLE = 'NumPy Dojo';
-export const DEFAULT_SHARE_TEXT =
-  'Free hands-on NumPy lessons with a live editor—no paywall, no account.';
+export { DEFAULT_SHARE_TEXT, DEFAULT_SHARE_TITLE };
 
 function resolveUrl(explicit?: string) {
   if (explicit) return explicit;

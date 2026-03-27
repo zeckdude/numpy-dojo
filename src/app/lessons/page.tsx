@@ -1,25 +1,26 @@
-'use client';
+import type { Metadata } from 'next';
+import { defaultOgImages, OG_IMAGE_PATH } from '@/lib/ogDefaultImage';
+import { LESSONS_INDEX_DESCRIPTION, LESSONS_INDEX_TITLE } from '@/lib/shareCopy';
+import { LessonsIndexRedirect } from './LessonsIndexRedirect';
 
-import { useEffect } from 'react';
-import { useRouter } from 'next/navigation';
-import { lessons } from '@/data/lessons';
-import { loadSet } from '@/lib/storage';
-import { lessonSlugAt } from '@/lib/routes';
+export const metadata: Metadata = {
+  title: LESSONS_INDEX_TITLE,
+  description: LESSONS_INDEX_DESCRIPTION,
+  openGraph: {
+    title: LESSONS_INDEX_TITLE,
+    description: LESSONS_INDEX_DESCRIPTION,
+    url: '/lessons',
+    type: 'website',
+    images: defaultOgImages(),
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: LESSONS_INDEX_TITLE,
+    description: LESSONS_INDEX_DESCRIPTION,
+    images: [OG_IMAGE_PATH],
+  },
+};
 
 export default function LessonsIndexPage() {
-  const router = useRouter();
-
-  useEffect(() => {
-    const completed = loadSet('np_dojo');
-    let idx = lessons.length - 1;
-    for (let i = 0; i < lessons.length; i++) {
-      if (!completed.has(i)) {
-        idx = i;
-        break;
-      }
-    }
-    router.replace('/lessons/' + lessonSlugAt(idx));
-  }, [router]);
-
-  return <div className="app app--dashboard" />;
+  return <LessonsIndexRedirect />;
 }

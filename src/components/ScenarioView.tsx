@@ -8,6 +8,7 @@ import { track } from '../lib/analytics';
 import { CodeEditor } from './CodeEditor';
 import { WhyItMattersSection } from './WhyItMattersSection';
 import { ShareSiteMenu } from './ShareSiteMenu';
+import { scenarioShareText, scenarioShareTitle } from '../lib/shareCopy';
 import { SplitPanes } from './SplitPanes';
 import { scenarioContextHtml } from '../lib/scenarioContext';
 import { LearnFontControl } from './LearnFontControl';
@@ -64,8 +65,8 @@ export function ScenarioView({ scenario, savedCode, onSaveCode, onOpenNav, compl
           <div className="learn-pill-right">
             <LearnFontControl />
             <ShareSiteMenu
-              title={`${scenario.title} · NumPy Dojo`}
-              text={`Try the scenario "${scenario.title}" on NumPy Dojo—short multi-step NumPy exercises.`}
+              title={scenarioShareTitle(scenario.title)}
+              text={scenarioShareText(scenario.title)}
               ariaLabel={`Share this scenario: ${scenario.title}`}
               variant="compact"
             />

@@ -5,6 +5,9 @@ import './hamburgers-elastic.css';
 import { PostHogInit } from '@/components/PostHogInit';
 import { AnalyticsPageView } from '@/components/AnalyticsPageView';
 import { MobileViewportShell } from '@/components/MobileViewportShell';
+import { defaultOgImages, OG_IMAGE_PATH } from '@/lib/ogDefaultImage';
+import { DEFAULT_SHARE_DESCRIPTION, DEFAULT_SHARE_TITLE, SITE_NAME } from '@/lib/shareCopy';
+import { getMetadataBase } from '@/lib/siteUrl';
 
 export const viewport: Viewport = {
   width: 'device-width',
@@ -13,8 +16,24 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
-  title: 'NumPy Dojo',
-  description: 'Interactive NumPy learning tool with hands-on lessons, real-world scenarios, and quizzes',
+  metadataBase: getMetadataBase(),
+  title: DEFAULT_SHARE_TITLE,
+  description: DEFAULT_SHARE_DESCRIPTION,
+  applicationName: SITE_NAME,
+  openGraph: {
+    type: 'website',
+    locale: 'en_US',
+    siteName: SITE_NAME,
+    title: DEFAULT_SHARE_TITLE,
+    description: DEFAULT_SHARE_DESCRIPTION,
+    images: defaultOgImages(),
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: DEFAULT_SHARE_TITLE,
+    description: DEFAULT_SHARE_DESCRIPTION,
+    images: [OG_IMAGE_PATH],
+  },
   icons: {
     icon: "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🥋</text></svg>",
   },

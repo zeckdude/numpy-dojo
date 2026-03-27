@@ -6,6 +6,7 @@ import { Lesson, LessonDocLink } from '../data/types';
 import { docLinkLogoProps } from '../lib/docLinkSources';
 import { WhyItMattersSection } from './WhyItMattersSection';
 import { ShareSiteMenu } from './ShareSiteMenu';
+import { lessonShareText, lessonShareTitle } from '../lib/shareCopy';
 import { HighlightedProse } from './HighlightedProse';
 import { LearnFontControl } from './LearnFontControl';
 
@@ -50,8 +51,8 @@ export function LessonView({
               <div className="learn-pill-right">
                 <LearnFontControl />
                 <ShareSiteMenu
-                  title={`${lesson.title} · NumPy Dojo`}
-                  text={`Practice "${lesson.title}" on NumPy Dojo—free lesson with a live NumPy editor.`}
+                  title={lessonShareTitle(lesson.title)}
+                  text={lessonShareText(lesson.title)}
                   ariaLabel={`Share this lesson: ${lesson.title}`}
                   variant="compact"
                 />

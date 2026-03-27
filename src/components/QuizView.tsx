@@ -7,6 +7,7 @@ import { QuizQuestion } from '../data/types';
 import { lessonSlugAt } from '../lib/routes';
 import { loadQuizHistory, saveQuizHistory, QuizHistoryEntry } from '../lib/storage';
 import { ShareSiteMenu } from './ShareSiteMenu';
+import { QUIZ_SHARE_TEXT, QUIZ_SHARE_TITLE } from '../lib/shareCopy';
 
 interface Props {
   toast: (msg: string) => void;
@@ -196,8 +197,8 @@ export function QuizView({ toast }: Props) {
 
             <div style={{ marginTop: 16, display: 'flex', justifyContent: 'center' }}>
               <ShareSiteMenu
-                title="NumPy Dojo — Quizzes"
-                text="Free NumPy quizzes with instant feedback on NumPy Dojo."
+                title={QUIZ_SHARE_TITLE}
+                text={QUIZ_SHARE_TEXT}
                 ariaLabel="Share NumPy Dojo quizzes"
                 variant="compact"
               />
@@ -315,8 +316,8 @@ export function QuizView({ toast }: Props) {
             <button className="quiz-start-btn" onClick={startQuiz}>Take Another Quiz</button>
             <button className="sm-btn" onClick={() => setPhase('setup')} style={{ marginTop: 0 }}>Back to Setup</button>
             <ShareSiteMenu
-              title="NumPy Dojo — Quizzes"
-              text="Free NumPy quizzes with instant feedback on NumPy Dojo."
+              title={QUIZ_SHARE_TITLE}
+              text={QUIZ_SHARE_TEXT}
               ariaLabel="Share NumPy Dojo quizzes"
               variant="compact"
             />

@@ -17,6 +17,14 @@ import { Toast } from './Toast';
 import { ThemeSwitch } from './ThemeSwitch';
 import { SplitPanes } from './SplitPanes';
 import { ShareSiteMenu } from './ShareSiteMenu';
+import {
+  lessonShareText,
+  lessonShareTitle,
+  QUIZ_SHARE_TEXT,
+  QUIZ_SHARE_TITLE,
+  scenarioShareText,
+  scenarioShareTitle,
+} from '../lib/shareCopy';
 import { ConfirmDialog } from './ConfirmDialog';
 import { MobileBreadcrumb } from './MobileBreadcrumb';
 import {
@@ -332,8 +340,8 @@ export function NumPyDojoApp({
     if (route.kind === 'lesson') {
       const lesson = lessons[currentLesson];
       return {
-        title: `${lesson.title} · NumPy Dojo`,
-        text: `Practice "${lesson.title}" on NumPy Dojo—free lesson with a live NumPy editor.`,
+        title: lessonShareTitle(lesson.title),
+        text: lessonShareText(lesson.title),
         ariaLabel: `Share this lesson: ${lesson.title}`,
         triggerLabel: 'Share' as const,
         variant: 'compact' as const,
@@ -342,8 +350,8 @@ export function NumPyDojoApp({
     if (route.kind === 'scenario') {
       const scenario = scenarios[currentScenario];
       return {
-        title: `${scenario.title} · NumPy Dojo`,
-        text: `Try the scenario "${scenario.title}" on NumPy Dojo—short multi-step NumPy exercises.`,
+        title: scenarioShareTitle(scenario.title),
+        text: scenarioShareText(scenario.title),
         ariaLabel: `Share this scenario: ${scenario.title}`,
         triggerLabel: 'Share' as const,
         variant: 'compact' as const,
@@ -351,8 +359,8 @@ export function NumPyDojoApp({
     }
     if (route.kind === 'quiz') {
       return {
-        title: 'NumPy Dojo — Quizzes',
-        text: 'Free NumPy quizzes with instant feedback on NumPy Dojo.',
+        title: QUIZ_SHARE_TITLE,
+        text: QUIZ_SHARE_TEXT,
         ariaLabel: 'Share NumPy Dojo quizzes',
         triggerLabel: 'Share' as const,
         variant: 'compact' as const,
